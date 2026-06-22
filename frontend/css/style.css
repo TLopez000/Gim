@@ -1,0 +1,21 @@
+/* Colores personalizados para Gimnastic */
+:root {
+    --gim-gold: #ff0000;
+    --gim-dark: #121212;
+    --gim-grey: #242424;
+}
+
+body {
+    background-color: var(--gim-dark);
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+td{
+    background-color: var(--gim-grey) !important;
+}
+
+.vault-card {
+    background-color: var(--gim-grey) !important;
+    border: 1px solid #333;
+}
