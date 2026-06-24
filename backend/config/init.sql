@@ -2,6 +2,7 @@ SET NAMES utf8;
 SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
+SET GLOBAL event_scheduler = ON;
 
 -- 1. Borrar la base de datos si existe
 DROP DATABASE IF EXISTS gimnastic;
@@ -127,13 +128,19 @@ CREATE PROCEDURE sp_create_alumn(
     IN p_alumn_name VARCHAR(100),
     IN p_alumn_age INT,
     IN p_alumn_level VARCHAR(50),
-    IN p_pay_state ENUM('paid', 'unpaid') DEFAULT 'unpaid',
+    IN p_pay_state ENUM('paid', 'unpaid'),
     IN p_alumn_group VARCHAR(50),
     IN p_phone VARCHAR(20)
 )
 BEGIN
-    INSERT INTO alumns (user_id, alumn_name, alumn_age, alumn_level, pay_state, alumn_group, phone)
-    VALUES (p_user_id, p_alumn_name, p_alumn_age, p_alumn_level, p_pay_state, p_alumn_group, p_phone);
+    -- Si el frontend llega a mandar un valor vacío o nulo, le asignamos 'unpaid' internamente
+    IF p_pay_state IS NULL OR p_pay_state = '' THEN
+        SET p_pay_state = 'unpaid';
+    END IF;
+
+    INSERT INTO alumns (user_id, alumn_name, alumn_group, alumn_level, alumn_age, pay_state, phone)
+    VALUES (p_user_id, p_alumn_name, p_alumn_group, p_alumn_level, p_alumn_age, p_pay_state, p_phone);
+    
     SELECT LAST_INSERT_ID() as insertId;
 END //
 
@@ -153,6 +160,17 @@ END //
 CREATE PROCEDURE sp_delete_alumn(IN p_id INT, IN p_user_id INT)
 BEGIN
     DELETE FROM alumns WHERE id = p_id AND user_id = p_user_id;
+END //
+
+-- Actualizar estado de pago cada mes
+
+CREATE EVENT IF NOT EXISTS ev_reset_monthly_pay_state
+ON SCHEDULE EVERY 1 MONTH
+STARTS DATE_FORMAT(NOW() + INTERVAL 1 MONTH, '%Y-%m-01 00:00:00')
+DO
+BEGIN
+    UPDATE alumns 
+    SET pay_state = 'unpaid';
 END //
 
 DELIMITER ;

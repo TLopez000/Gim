@@ -4,14 +4,27 @@ class AlumnRepository
 {
     // Insertar un nuevo registro de alumno
     async create(alumnData) 
-    {
-        const { user_id, alumn_name, alumn_age, alumn_level, alumn_group, phone, pay_state } = alumnData;
+{
+    const { user_id, alumn_name, alumn_age, alumn_level, pay_state, alumn_group, phone } = alumnData;
+    
+    try {
         const [rows] = await db.execute(
             'CALL sp_create_alumn(?, ?, ?, ?, ?, ?, ?)', 
             [user_id, alumn_name, alumn_age, alumn_level, pay_state, alumn_group, phone]
         );
-        return rows[0][0].insertId;
+
+        // Validamos de forma segura que la respuesta tenga la estructura esperada
+        if (rows && rows[0] && rows[0][0]) {
+            return rows[0][0].insertId;
+        }
+        
+        throw new Error("No se pudo obtener el ID del alumno insertado.");
+    } catch (sqlError) {
+        // Esto te mostrará en la consola de la terminal el error real de MySQL si falla por tipos de datos (como el ENUM)
+        console.error("Error en la base de datos al crear alumno:", sqlError);
+        throw sqlError; // Re-lanzamos para que lo ataje el controlador
     }
+}
 
     // Obtener todos los alumns de un productor específico
     async findByUserId(userId) 
