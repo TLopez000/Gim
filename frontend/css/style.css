@@ -1,12 +1,20 @@
 /* Colores personalizados para Gimnastic */
 :root {
-    --gim-gold: #ff0000;
+    --gim-red: #ff0000;
     --gim-dark: #121212;
     --gim-grey: #242424;
 }
 
 body {
     background-color: var(--gim-dark);
+    
+    /* ⬇️ Capa negra traslúcida al 65% de opacidad encima de tu imagen ⬇️ */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url('../images/gim-background.png');
+    
+    background-size: 100vw 100vh;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
     color: white;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }

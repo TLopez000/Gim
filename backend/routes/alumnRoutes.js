@@ -1,22 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const alumnController = require('../controllers/alumnController');
-
 const { verifyToken } = require('../middleware/authMiddleware');
 
 // Todas las rutas de alumnos requieren que el usuario esté logueado
 router.use(verifyToken);
 
-// Subir un nuevo alumno: POST /api/alumnos/uploads
+// 1. RUTAS ESPECÍFICAS (Van primero)
 router.post('/', alumnController.uploadAlumn);
-
-// Listar mis alumnos: GET /api/alumnos/my-alumns
 router.get('/my-alumns', alumnController.getMyAlumns);
-
-// Actualizar su estado de pago
 router.put('/update-payment-status/:id', alumnController.updatePaymentStatus);
 
-// Eliminar un alumno: DELETE /api/alumnos/:id
+// 2. RUTAS DINÁMICAS CON PREFIJO (Si tuvieras, ej: /group/:group)
+// Tip: Es mejor que la ruta de grupo sea '/group/:group' para que no choque con '/:id'
+router.get('/filter/:group/:pay_state', alumnController.getAlumnsByFilter); 
+
+// 3. RUTAS TOTALMENTE DINÁMICAS (Van al final de todo)
 router.delete('/:id', alumnController.deleteAlumn);
 
 module.exports = router;

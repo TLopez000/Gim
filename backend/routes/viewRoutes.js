@@ -21,6 +21,10 @@ router.get('/register', (req, res) => {
     res.sendFile(path.join(__dirname, '../../frontend/html/register.html'));
 });
 
+router.get('/inscript-Dashboard', (req, res)=> {
+    res.sendFile(path.join(__dirname,'../../frontend/html/inscript-Dashboard.html'));
+});
+
 router.get('/profe-Dashboard', (req, res) => {
     res.sendFile(path.join(__dirname, '../../frontend/html/profe-Dashboard.html'));
 });

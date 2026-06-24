@@ -68,6 +68,18 @@ INSERT INTO users_roles (user_id, role_id) VALUES (1, 1); -- Rol Admin
 INSERT INTO users (id, username, password) VALUES (2, 'Tomi', '$2b$10$.n0s847tiSxBqDvIo6Vg5ujXC5zIUmm98bTjBWnRdqX9CxxbIo7wS');
 INSERT INTO users_roles (user_id, role_id) VALUES (2, 2); -- Rol Teacher
 
+-- Datos de prueba
+
+INSERT INTO alumns (user_id, alumn_name, alumn_age, alumn_level, pay_state, phone, alumn_group) VALUES
+(2, 'Lucas Martínez', 15, 'Secundaria', 'paid', '+541123456789', 'Ludmila'),
+(2, 'Sofía Rodríguez', 14, 'Secundaria', 'unpaid', '+541198765432', 'Ludmila'),
+(2, 'Mateo Benítez', 16, 'Secundaria', 'paid', '+541133445566', 'Messi'),
+(2, 'Valentina Flores', 15, 'Secundaria', 'unpaid', '+541155667788', 'Ludmila'),
+(2, 'Santiago Gómez', 12, 'Primaria', 'paid', '+541177889900', 'Messi'),
+(2, 'Mia Carrizo', 11, 'Primaria', 'paid', '+541122334455', 'Messi'),
+(2, 'Thiago Silva', 12, 'Primaria', 'unpaid', '+541166778899', 'Ludmila'),
+(2, 'Emma Pereyra', 17, 'Bachillerato', 'paid', '+541144556677', 'Messi');
+
 -- ==========================================================
 -- 9. PROCEDIMIENTOS ALMACENADOS (Stored Procedures)
 -- ==========================================================
@@ -156,6 +168,18 @@ BEGIN
     SELECT * FROM alumns WHERE id = p_id AND user_id = p_user_id;
 END //
 
+-- Buscar alumn por filtro validando dueño
+CREATE PROCEDURE sp_find_alumns_by_filter(IN p_alumn_group VARCHAR(50), IN p_pay_state VARCHAR(10), IN p_user_id INT)
+BEGIN  
+    SELECT * FROM alumns 
+    WHERE user_id = p_user_id
+      -- Filtro de Grupo: Si es null, 'null' o vacío, da TRUE (ignora el filtro). Si tiene valor, filtra.
+      AND (p_alumn_group IS NULL OR p_alumn_group = 'null' OR p_alumn_group = '' OR alumn_group = p_alumn_group)
+      
+      -- Filtro de Estado: Si es null, 'null' o vacío, da TRUE (ignora el filtro). Si tiene valor, filtra.
+      AND (p_pay_state IS NULL OR p_pay_state = 'null' OR p_pay_state = '' OR pay_state = p_pay_state);
+END //
+
 -- Borrar alumn (Validando dueño)
 CREATE PROCEDURE sp_delete_alumn(IN p_id INT, IN p_user_id INT)
 BEGIN
@@ -180,6 +204,8 @@ BEGIN
     SET pay_state = p_new_status
     WHERE id = p_id AND user_id = p_user_id;
 END //
+
+
 
 DELIMITER ;
 SET foreign_key_checks = 1;

@@ -93,7 +93,37 @@ class AlumnController
        catch (error) {
         res.status(500).json({ message: "Error al actualizar el estado de pago.", error: error.message });
        }
-}
+    }
+
+   async getAlumnsByFilter(req, res) {
+    try {
+        // 1. LEER DE REQ.PARAMS (Coincide con ruta /filter/:group/:pay_state)
+        const { group, pay_state } = req.params;
+        const userId = req.userId;
+
+        // 2. IMPORTANTE: Si el frontend manda el string "null" o "all", lo pasamos a null real para MariaDB
+        const filterGroup = (group === 'null' || group === 'all' || !group) ? null : group;
+        const filterPayState = (pay_state === 'null' || pay_state === 'all' || !pay_state) ? null : pay_state;
+
+        // 3. Pasamos los valores normalizados al repositorio
+        const result = await alumnRepo.findByFilter(filterGroup, filterPayState, userId);
+         
+        // 4. Validamos si encontramos alumnos
+        if (!result || result.length === 0) {
+            return res.status(404).json({ 
+                message: "No se encontraron alumnos con los filtros especificados." 
+            });
+        }
+
+        res.json(result);  
+    }
+    catch(error) {
+        res.status(500).json({ 
+            message: "Error al recuperar los alumnos por filtro.", 
+            error: error.message 
+        });
+    }
+  }
 }
 
 module.exports = new AlumnController();

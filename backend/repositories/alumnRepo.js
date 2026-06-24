@@ -26,10 +26,16 @@ class AlumnRepository
     }
 }
 
-    // Obtener todos los alumns de un productor específico
+    // Obtener todos los alumns de un user específico
     async findByUserId(userId) 
     {
         const [rows] = await db.execute('CALL sp_find_alumns_by_user(?)', [userId]);
+        return rows[0];
+    }
+
+    // Obtener todos los alumnos de un grupo 
+    async findByFilter(alumnGroup, pay_state, userId) {
+        const [rows] = await db.execute('CALL sp_find_alumns_by_filter(?,?, ?)', [alumnGroup, pay_state, userId]);
         return rows[0];
     }
 
