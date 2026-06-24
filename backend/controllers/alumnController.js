@@ -77,6 +77,23 @@ class AlumnController
             res.status(500).json({ message: "Error al eliminar el alumno.", error: error.message });
         }
     }
+
+    async updatePaymentStatus(req, res) {
+        const id = parseInt(req.params.id, 10); 
+        const { pay_state } = req.body;
+        const userId = req.userId;
+
+        try {
+        // Al repositorio solo le pasas las variables limpias que necesita
+        const result = await alumnRepo.updatePaymentStatus(id, userId, pay_state);
+        
+        // Enviamos la respuesta de éxito al frontend
+        res.json({ message: "Estado de pago actualizado correctamente." });
+       } 
+       catch (error) {
+        res.status(500).json({ message: "Error al actualizar el estado de pago.", error: error.message });
+       }
+}
 }
 
 module.exports = new AlumnController();

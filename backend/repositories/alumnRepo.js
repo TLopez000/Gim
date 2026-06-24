@@ -46,6 +46,13 @@ class AlumnRepository
         await db.execute('CALL sp_delete_alumn(?, ?)', [id, userId]);
         return true;
     }
+
+    // Actualizar el estado de pago de un alumno
+    async updatePaymentStatus(id, userId, newStatus) 
+    {
+        await db.execute('CALL sp_update_payment_status(?, ?, ?)', [id, userId, newStatus]);
+        return true;
+    }
 }
 
 module.exports = new AlumnRepository();

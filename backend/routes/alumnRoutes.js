@@ -13,6 +13,9 @@ router.post('/', alumnController.uploadAlumn);
 // Listar mis alumnos: GET /api/alumnos/my-alumns
 router.get('/my-alumns', alumnController.getMyAlumns);
 
+// Actualizar su estado de pago
+router.put('/update-payment-status/:id', alumnController.updatePaymentStatus);
+
 // Eliminar un alumno: DELETE /api/alumnos/:id
 router.delete('/:id', alumnController.deleteAlumn);
 

@@ -173,5 +173,13 @@ BEGIN
     SET pay_state = 'unpaid';
 END //
 
+-- Actualizar estado de pago de un alumno específico
+CREATE PROCEDURE sp_update_payment_status(IN p_id INT, IN p_user_id INT, IN p_new_status ENUM('paid', 'unpaid'))
+BEGIN
+    UPDATE alumns 
+    SET pay_state = p_new_status
+    WHERE id = p_id AND user_id = p_user_id;
+END //
+
 DELIMITER ;
 SET foreign_key_checks = 1;

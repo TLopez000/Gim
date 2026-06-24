@@ -31,7 +31,7 @@ class AuthController
             const hashedPassword = await bcrypt.hash(password, 10);            
             
             // 2. Creación mediante el repositorio (que usa el SP sp_create_user)
-            const userId = await userRepo.create(username, hashedPassword, 'producer');
+            const userId = await userRepo.create(username, hashedPassword, 'teacher'); // Por defecto, todos los usuarios registrados son 'teacher'
             
             res.status(201).json({ 
                 message: "Usuario registrado con éxito.", 
