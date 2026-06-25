@@ -14,45 +14,7 @@
     <button class="w3-bar-item w3-button w3-right btn-logout">Salir</button>
 </div>
 
-<div class="w3-container w3-padding-32">
-    <div class="w3-row-padding">
-        
-        <div class="w3-col l4 m5 s12">
-            <div class="w3-card-4 vault-card w3-padding w3-round">
-                <h3 class="w3-text-red">Subir Nuevo Alumno</h3>
-                <form id="uploadForm">
-                    <label>Nombre</label>
-                    <input class="w3-input w3-border w3-round w3-transparent w3-text-white" type="text" id="alumn_name" required>
-                    
-                    <label class="w3-margin-top">Edad (1-60)</label>
-                    <input class="w3-input w3-border w3-round w3-transparent w3-text-white" type="number" id="alumn_age" min="1" max="60" required>
-
-                    <label class="w3-margin-top">Teléfono</label>
-                    <input class="w3-input w3-border w3-round w3-transparent w3-text-white" type="tel" id="phone" required>
-
-                    <label>Grupo de clases</label>
-                        <select class="w3-input w3-border w3-round w3-text-white" id="alumn_group" required style="background-color: #333;">
-                          <option value="">Seleccionar profe</option>
-                          <option value="Ludmila">Ludmila</option>
-                          <option value="Messi">Messi</option>
-                        </select>
-                    <label class="w3-margin-top">Nivel</label>
-                    <input class="w3-input w3-border w3-round w3-transparent w3-text-white" type="text" id="alumn_level" placeholder="1..10" required>
-
-                    <label class="w3-margin-top">Estado Mensual</label>
-                    <select class="w3-input w3-border w3-round w3-text-white" id="pay_state" required style="background-color: #333;">
-                        <option value="">Seleccionar estado</option>
-                        <option value="paid">Pago</option>
-                        <option value="unpaid">En deuda</option>
-                    </select>
-
-                    <button type="submit" class="w3-button w3-red w3-block w3-round-large w3-margin-top">
-                        <b>CARGAR</b>
-                    </button>
-                </form>
-            </div>
-        </div>
-        <div>
+<div class="w3-container w3- w3-padding-32">
         
             <div class="w3-col l4 m5 s12">
                 <div class="w3-card-4 vault-card w3-padding w3-round">
@@ -64,12 +26,20 @@
                           <option value="Ludmila">Ludmila</option>
                           <option value="Messi">Messi</option>
                         </select>
-                        <label>Estado Mensual</label>
-                        <select class="w3-input w3-border w3-round w3-text-white" id="selectState" style="background-color: #333;">
-                          <option value="all">Seleccionar estado</option>
-                          <option value="paid">Al dia</option>
-                          <option value="unpaid">En deuda</option>
-                        </select>
+                        <label>Nivel</label>
+                         <select id="selectLevel" class="w3-input w3-border w3-round">
+                             <option value=0 selected>Todos</option>
+                             <option value=1>1</option>
+                             <option value=2>2</option>
+                             <option value=3>3</option>
+                             <option value=4>4</option>
+                             <option value=5>5</option>
+                             <option value=6>6</option>
+                             <option value=7>7</option>
+                             <option value=8>8</option>
+                             <option value=9>9</option>
+                             <option value=10>10</option>
+                        </select> 
                         <button type="submit" class="w3-button w3-red w3-block w3-round-large w3-margin-top">
                             <b>BUSCAR</b>
                         </button>
@@ -91,7 +61,6 @@
                             <th>Grupo de clases</th>
                             <th>Nivel</th>
                             <th>Teléfono</th>
-                            <th>Estado Mensual</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>

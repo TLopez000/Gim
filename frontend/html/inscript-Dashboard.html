@@ -29,22 +29,14 @@
                     <label class="w3-margin-top">Teléfono</label>
                     <input class="w3-input w3-border w3-round w3-transparent w3-text-white" type="tel" id="phone" required>
 
-                    <label>Grupo de clases</label>
-                        <select class="w3-input w3-border w3-round w3-text-white" id="alumn_group" required style="background-color: #333;">
-                          <option value="">Seleccionar profe</option>
-                          <option value="Ludmila">Ludmila</option>
-                          <option value="Messi">Messi</option>
+                    <label>Actividad</label>
+                        <select class="w3-input w3-border w3-round w3-text-white" id="alumn_activity" required style="background-color: #333;">
+                          <option value="">Seleccionar actividad</option>
+                          <option value="Gimnasia">Gimnasia Artistica</option>
+                          <option value="Futbol">Futbol </option>
+                          <option value="Atletismo">Atletismo</option>
+                          <option value="Otra">Otra</option>
                         </select>
-                        
-                    <label class="w3-margin-top">Nivel</label>
-                    <input class="w3-input w3-border w3-round w3-transparent w3-text-white" type="text" id="alumn_level" placeholder="1..10" required>
-
-                    <label class="w3-margin-top">Estado Mensual</label>
-                    <select class="w3-input w3-border w3-round w3-text-white" id="pay_state" required style="background-color: #333;">
-                        <option value="">Seleccionar estado</option>
-                        <option value="paid">Pago</option>
-                        <option value="unpaid">En deuda</option>
-                    </select>
 
                     <button type="submit" class="w3-button w3-red w3-block w3-round-large w3-margin-top">
                         <b>CARGAR</b>
@@ -57,6 +49,6 @@
 <script src="../js/services/apiService.js"></script>
 <script src="../js/components/uiHandlers.js"></script>
 <script src="../js/utils/authHelper.js"></script>
-<script src="../js/frontControllers/alumnFrontController.js"></script>
+<script src="../js/frontControllers/inscriptFrontController.js"></script>
 </body>
 </html>
