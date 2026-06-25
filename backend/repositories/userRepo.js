@@ -11,7 +11,7 @@ class UserRepository
     }
 
     // Crear un nuevo usuario y asignar su rol en una sola operación atómica
-    async create(username, hashedPassword, role = 'teacher')  
+    async create(username, hashedPassword, role)  
     {
         const [rows] = await db.execute(
             'CALL sp_create_user(?, ?, ?)',

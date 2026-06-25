@@ -1,41 +1,69 @@
 
 const alumnRepo = require('../repositories/alumnRepo');
 
+const userRepo = require('../repositories/userRepo');
 
-class AlumnController 
+
+
+class AlumnController
 {
-    // Método para subir un alumno y guardarlo en la BD
-    async uploadAlumn(req, res) 
-    {
-        try
-        {
+    async uploadAlumn(req, res) {
+    try {
+        // 1. EXTRAER las variables desde el req.body (¡Esto es lo que faltaba!)
+        
+        const { alumn_name, alumn_age, phone, alumn_activity, alumn_group, alumn_level } = req.body;
 
-            const { alumn_name, alumn_age, alumn_level, pay_state, alumn_group, phone } = req.body;
-            
-
-            const userId = req.userId; // Proveniente del verifyToken
-
-            // 2. Persistencia mediante el SP sp_create_sample
-            const insertId = await alumnRepo.create({
-                user_id: userId,
-                alumn_name: alumn_name,
-                alumn_age: alumn_age,
-                alumn_level: alumn_level,
-                pay_state: pay_state,
-                phone: phone,
-                alumn_group: alumn_group
-            });
-            res.status(201).json({ 
-                message: "Alumno cargado exitosamente", 
-                id: insertId,
+        const schoolUser = await userRepo.findByUsername(alumn_activity); 
+        
+        // Validamos si la escuela existe en la BD
+        if (!schoolUser) {
+            return res.status(404).json({
+                success: false,
+                message: `La escuela o actividad '${alumn_activity}' no existe.`
             });
         }
-        catch (error)
-        {
-            
-            res.status(500).json({ message: "Error.", error: error.message });
-        }
+
+        const userId = schoolUser.id;
+
+        // 3. Armamos el objeto limpio para el repositorio
+        const alumnData = {
+            user_id: userId,
+            alumn_name: alumn_name || null,
+            alumn_group: alumn_group || '-',
+            alumn_level: alumn_level ? parseInt(alumn_level, 10) : 1,
+            alumn_age: alumn_age ? parseInt(alumn_age, 10) : null,
+            alumn_activity: alumn_activity,
+            phone: phone || null
+        };
+
+        // 4. Guardamos en MariaDB
+        const insertId = await alumnRepo.create(alumnData);
+
+        return res.status(201).json({
+            success: true,
+            message: "Alumno inscrito exitosamente.",
+            insertId
+        });
+
+    } catch (error) {
+        console.error("Error en el controlador al registrar alumno:", error);
+        return res.status(500).json({
+            message: "Error interno del servidor.",
+            error: error.message
+        });
     }
+};
+    
+   // Obtener grupos disponibles o existentes
+   async getGroups(req, res) {
+    try {
+        const userId = req.userId; // Id proveniente de la sesion iniciada
+        const groups = await alumnRepo.getGroupsByUserId(userId);
+        res.json(groups);
+    } catch (error) {
+        res.status(500).json({ message: "Error al recuperar los grupos.", error: error.message });
+    }
+}
 
     // Listar alumnos
     async getMyAlumns(req, res)
@@ -78,35 +106,52 @@ class AlumnController
         }
     }
 
-    async updatePaymentStatus(req, res) {
+    async updateAlumnLevel(req, res) {
         const id = parseInt(req.params.id, 10); 
-        const { pay_state } = req.body;
-        const userId = req.userId;
+        const { level } = req.body;
+        
+        const userId = req.userId; 
 
         try {
-        // Al repositorio solo le pasas las variables limpias que necesita
-        const result = await alumnRepo.updatePaymentStatus(id, userId, pay_state);
+        
+        const result = await alumnRepo.updateAlumnLevel(id, userId, level);
         
         // Enviamos la respuesta de éxito al frontend
-        res.json({ message: "Estado de pago actualizado correctamente." });
+        res.json({ message: "Nivel actualizado correctamente." });
        } 
        catch (error) {
-        res.status(500).json({ message: "Error al actualizar el estado de pago.", error: error.message });
+        res.status(500).json({ message: "Error al actualizar el nivel.", error: error.message });
        }
+    }
+
+    async updateAlumnGroup(req, res) {
+        const id = parseInt(req.params.id, 10);
+        const { group } = req.body;
+        
+        const userId = req.userId;
+        
+        try {
+            const result = await alumnRepo.updateAlumnGroup(id, userId, group);
+            res.json({ message: "Grupo actualizado correctamente." });
+        }
+        catch (error) {
+            res.status(500).json({ message: "Error al actualizar el grupo.", error: error.message });
+        }
     }
 
    async getAlumnsByFilter(req, res) {
     try {
-        // 1. LEER DE REQ.PARAMS (Coincide con ruta /filter/:group/:pay_state)
-        const { group, pay_state } = req.params;
-        const userId = req.userId;
+        // 1. LEER DE REQ.PARAMS (Coincide con ruta /filter/:group/:level)
+        const { group, level } = req.params;
+
+        const userId = req.userId; // Id proveniente de la sesion iniciada
 
         // 2. IMPORTANTE: Si el frontend manda el string "null" o "all", lo pasamos a null real para MariaDB
         const filterGroup = (group === 'null' || group === 'all' || !group) ? null : group;
-        const filterPayState = (pay_state === 'null' || pay_state === 'all' || !pay_state) ? null : pay_state;
+        const filterLevel = level;
 
         // 3. Pasamos los valores normalizados al repositorio
-        const result = await alumnRepo.findByFilter(filterGroup, filterPayState, userId);
+        const result = await alumnRepo.findByFilter(filterGroup, filterLevel, userId);
          
         // 4. Validamos si encontramos alumnos
         if (!result || result.length === 0) {

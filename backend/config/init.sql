@@ -49,36 +49,49 @@ CREATE TABLE alumns (
     alumn_name VARCHAR(100) NOT NULL,
     alumn_age INT NOT NULL,
     alumn_level VARCHAR(50) NOT NULL,
-    pay_state ENUM('paid', 'unpaid') NOT NULL DEFAULT 'unpaid',
+    alumn_activity ENUM('Gimnasia','Atletismo','Futbol') NOT NULL,
     phone VARCHAR(20) NOT NULL,
     alumn_group VARCHAR(50) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+-- Tabla de teachers
+CREATE TABLE teachers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    teacher_name VARCHAR(100) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 -- 7. Inserción de Datos Maestros (Roles)
-INSERT INTO roles (name) VALUES ('admin'), ('teacher');
+INSERT INTO roles (name) VALUES ('admin'), ('school');
 
 -- 8. Datos de prueba iniciales
 -- Usuario 'admin' (pass: 12345)
 INSERT INTO users (id, username, password) VALUES (1, 'admin', '$2b$10$.n0s847tiSxBqDvIo6Vg5ujXC5zIUmm98bTjBWnRdqX9CxxbIo7wS');
 INSERT INTO users_roles (user_id, role_id) VALUES (1, 1); -- Rol Admin
 
--- Usuario 'Tomi' (pass: 12345)
-INSERT INTO users (id, username, password) VALUES (2, 'Tomi', '$2b$10$.n0s847tiSxBqDvIo6Vg5ujXC5zIUmm98bTjBWnRdqX9CxxbIo7wS');
-INSERT INTO users_roles (user_id, role_id) VALUES (2, 2); -- Rol Teacher
+-- Usuario 'Gimnasia' (pass: 12345)
+INSERT INTO users (id, username, password) VALUES (2, 'Gimnasia', '$2b$10$.n0s847tiSxBqDvIo6Vg5ujXC5zIUmm98bTjBWnRdqX9CxxbIo7wS');
+INSERT INTO users_roles (user_id, role_id) VALUES (2, 2); -- Rol school
+
+-- Insercion de profesores
+INSERT INTO teachers (user_id, teacher_name) VALUES
+(2, 'Ludmila'),
+(2, 'Messi');
 
 -- Datos de prueba
 
-INSERT INTO alumns (user_id, alumn_name, alumn_age, alumn_level, pay_state, phone, alumn_group) VALUES
-(2, 'Lucas Martínez', 15, 'Secundaria', 'paid', '+541123456789', 'Ludmila'),
-(2, 'Sofía Rodríguez', 14, 'Secundaria', 'unpaid', '+541198765432', 'Ludmila'),
-(2, 'Mateo Benítez', 16, 'Secundaria', 'paid', '+541133445566', 'Messi'),
-(2, 'Valentina Flores', 15, 'Secundaria', 'unpaid', '+541155667788', 'Ludmila'),
-(2, 'Santiago Gómez', 12, 'Primaria', 'paid', '+541177889900', 'Messi'),
-(2, 'Mia Carrizo', 11, 'Primaria', 'paid', '+541122334455', 'Messi'),
-(2, 'Thiago Silva', 12, 'Primaria', 'unpaid', '+541166778899', 'Ludmila'),
-(2, 'Emma Pereyra', 17, 'Bachillerato', 'paid', '+541144556677', 'Messi');
+INSERT INTO alumns (user_id, alumn_name, alumn_age, alumn_level, alumn_activity, phone, alumn_group) VALUES
+(2, 'Lucas Martínez', 15, '2', 'Gimnasia', '+541123456789', 'Ludmila'),
+(2, 'Sofía Rodríguez', 14, '3', 'Gimnasia', '+541198765432', 'Ludmila'),
+(3, 'Mateo Benítez', 16, '3', 'Gimnasia', '+541133445566', 'Messi'),
+(4, 'Valentina Flores', 15, '2', 'Gimnasia', '+541155667788', 'Ludmila'),
+(4, 'Santiago Gómez', 12, '1', 'Gimnasia', '+541177889900', 'Messi'),
+(2, 'Mia Carrizo', 11, '7', 'Gimnasia', '+541122334455', 'Messi'),
+(2, 'Thiago Silva', 12, '7', 'Gimnasia', '+541166778899', 'Ludmila'),
+(2, 'Emma Pereyra', 17, '9', 'Gimnasia', '+541144556677', 'Messi');
 
 -- ==========================================================
 -- 9. PROCEDIMIENTOS ALMACENADOS (Stored Procedures)
@@ -135,23 +148,20 @@ END //
 -- --- PROCEDIMIENTOS PARA ALUMNOS ---
 
 -- Crear Alumno
+DELIMITER //
+
 CREATE PROCEDURE sp_create_alumn(
     IN p_user_id INT,
     IN p_alumn_name VARCHAR(100),
-    IN p_alumn_age INT,
-    IN p_alumn_level VARCHAR(50),
-    IN p_pay_state ENUM('paid', 'unpaid'),
     IN p_alumn_group VARCHAR(50),
+    IN p_alumn_level INT,
+    IN p_alumn_age INT,
+    IN p_alumn_activity VARCHAR(100),
     IN p_phone VARCHAR(20)
 )
 BEGIN
-    -- Si el frontend llega a mandar un valor vacío o nulo, le asignamos 'unpaid' internamente
-    IF p_pay_state IS NULL OR p_pay_state = '' THEN
-        SET p_pay_state = 'unpaid';
-    END IF;
-
-    INSERT INTO alumns (user_id, alumn_name, alumn_group, alumn_level, alumn_age, pay_state, phone)
-    VALUES (p_user_id, p_alumn_name, p_alumn_group, p_alumn_level, p_alumn_age, p_pay_state, p_phone);
+    INSERT INTO alumns (user_id, alumn_name, alumn_group, alumn_level, alumn_age, alumn_activity, phone)
+    VALUES (p_user_id, p_alumn_name, p_alumn_group, p_alumn_level, p_alumn_age, p_alumn_activity, p_phone);
     
     SELECT LAST_INSERT_ID() as insertId;
 END //
@@ -169,15 +179,15 @@ BEGIN
 END //
 
 -- Buscar alumn por filtro validando dueño
-CREATE PROCEDURE sp_find_alumns_by_filter(IN p_alumn_group VARCHAR(50), IN p_pay_state VARCHAR(10), IN p_user_id INT)
+CREATE PROCEDURE sp_find_alumns_by_filter(IN p_alumn_group VARCHAR(50), IN p_alumn_level INT, IN p_user_id INT)
 BEGIN  
     SELECT * FROM alumns 
     WHERE user_id = p_user_id
       -- Filtro de Grupo: Si es null, 'null' o vacío, da TRUE (ignora el filtro). Si tiene valor, filtra.
       AND (p_alumn_group IS NULL OR p_alumn_group = 'null' OR p_alumn_group = '' OR alumn_group = p_alumn_group)
       
-      -- Filtro de Estado: Si es null, 'null' o vacío, da TRUE (ignora el filtro). Si tiene valor, filtra.
-      AND (p_pay_state IS NULL OR p_pay_state = 'null' OR p_pay_state = '' OR pay_state = p_pay_state);
+      AND (p_alumn_level = 0 OR p_alumn_level = 'null' OR p_alumn_level = '' OR alumn_level = p_alumn_level);
+
 END //
 
 -- Borrar alumn (Validando dueño)
@@ -186,23 +196,27 @@ BEGIN
     DELETE FROM alumns WHERE id = p_id AND user_id = p_user_id;
 END //
 
--- Actualizar estado de pago cada mes
 
-CREATE EVENT IF NOT EXISTS ev_reset_monthly_pay_state
-ON SCHEDULE EVERY 1 MONTH
-STARTS DATE_FORMAT(NOW() + INTERVAL 1 MONTH, '%Y-%m-01 00:00:00')
-DO
+-- Actualizar nivel de un alumno específico
+CREATE PROCEDURE sp_update_level(IN p_id INT, IN p_user_id INT, IN p_new_level INT)
 BEGIN
     UPDATE alumns 
-    SET pay_state = 'unpaid';
+    SET alumn_level = p_new_level
+    WHERE id = p_id AND user_id = p_user_id;
 END //
 
--- Actualizar estado de pago de un alumno específico
-CREATE PROCEDURE sp_update_payment_status(IN p_id INT, IN p_user_id INT, IN p_new_status ENUM('paid', 'unpaid'))
+-- Actualizar grupo de un alumno específico
+CREATE PROCEDURE sp_update_group(IN p_id INT, IN p_user_id INT, IN p_new_group VARCHAR(20))
 BEGIN
     UPDATE alumns 
-    SET pay_state = p_new_status
+    SET alumn_group = p_new_group
     WHERE id = p_id AND user_id = p_user_id;
+END //
+
+-- Obtener grupos disponibles por userid
+CREATE PROCEDURE sp_get_groups_by_user(IN p_user_id INT)
+BEGIN
+    SELECT DISTINCT teacher_name FROM teachers WHERE user_id = p_user_id;
 END //
 
 

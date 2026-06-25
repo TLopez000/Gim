@@ -36,6 +36,7 @@ const path = require('path');
 const authRoutes = require('./routes/authRoutes');
 const alumnRoutes = require('./routes/alumnRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const inscriptRoutes = require('./routes/inscriptRoutes');
 const viewRoutes = require('./routes/viewRoutes');
 //const testsRoutes = require('./routes/testsRoutes');
 
@@ -55,8 +56,10 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 
 // --- Registrar rutas de la API ---
 app.use('/api/auth', authRoutes);
+app.use('/api/alumnos/inscript', inscriptRoutes);
 app.use('/api/alumnos', alumnRoutes);
 app.use('/api/admin', adminRoutes);
+
 
 // --- Registrar rutas de Navegación del Frontend ---
 // Se coloca al final para que actúe como capturador de rutas de UI

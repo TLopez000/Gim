@@ -7,13 +7,16 @@ const { verifyToken } = require('../middleware/authMiddleware');
 router.use(verifyToken);
 
 // 1. RUTAS ESPECÍFICAS (Van primero)
-router.post('/', alumnController.uploadAlumn);
+
 router.get('/my-alumns', alumnController.getMyAlumns);
-router.put('/update-payment-status/:id', alumnController.updatePaymentStatus);
+router.get('/groups', alumnController.getGroups);
+router.put('/update-level/:id', alumnController.updateAlumnLevel);
+router.put('/update-group/:id', alumnController.updateAlumnGroup);
+
 
 // 2. RUTAS DINÁMICAS CON PREFIJO (Si tuvieras, ej: /group/:group)
 // Tip: Es mejor que la ruta de grupo sea '/group/:group' para que no choque con '/:id'
-router.get('/filter/:group/:pay_state', alumnController.getAlumnsByFilter); 
+router.get('/filter/:group/:level', alumnController.getAlumnsByFilter); 
 
 // 3. RUTAS TOTALMENTE DINÁMICAS (Van al final de todo)
 router.delete('/:id', alumnController.deleteAlumn);

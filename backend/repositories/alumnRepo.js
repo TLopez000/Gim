@@ -4,27 +4,28 @@ class AlumnRepository
 {
     // Insertar un nuevo registro de alumno
     async create(alumnData) 
-{
-    const { user_id, alumn_name, alumn_age, alumn_level, pay_state, alumn_group, phone } = alumnData;
+    {
+        const { user_id, alumn_name, alumn_group, alumn_level, alumn_age, alumn_activity, phone } = alumnData;
     
-    try {
-        const [rows] = await db.execute(
-            'CALL sp_create_alumn(?, ?, ?, ?, ?, ?, ?)', 
-            [user_id, alumn_name, alumn_age, alumn_level, pay_state, alumn_group, phone]
-        );
+        try {
+           const [rows] = await db.execute(
+              'CALL sp_create_alumn(?, ?, ?, ?, ?, ?, ?)', 
+               [user_id, alumn_name, alumn_group, alumn_level, alumn_age , alumn_activity, phone]
+           );
 
-        // Validamos de forma segura que la respuesta tenga la estructura esperada
-        if (rows && rows[0] && rows[0][0]) {
-            return rows[0][0].insertId;
-        }
+          // Validamos de forma segura que la respuesta tenga la estructura esperada
+          if (rows && rows[0] && rows[0][0]) {
+              return rows[0][0].insertId;
+          }
         
-        throw new Error("No se pudo obtener el ID del alumno insertado.");
-    } catch (sqlError) {
+          throw new Error("No se pudo obtener el ID del alumno insertado.");
+        } 
+        catch (sqlError) {
         // Esto te mostrará en la consola de la terminal el error real de MySQL si falla por tipos de datos (como el ENUM)
         console.error("Error en la base de datos al crear alumno:", sqlError);
         throw sqlError; // Re-lanzamos para que lo ataje el controlador
+        }
     }
-}
 
     // Obtener todos los alumns de un user específico
     async findByUserId(userId) 
@@ -34,8 +35,8 @@ class AlumnRepository
     }
 
     // Obtener todos los alumnos de un grupo 
-    async findByFilter(alumnGroup, pay_state, userId) {
-        const [rows] = await db.execute('CALL sp_find_alumns_by_filter(?,?, ?)', [alumnGroup, pay_state, userId]);
+    async findByFilter(alumnGroup, alumnLevel, userId) {
+        const [rows] = await db.execute('CALL sp_find_alumns_by_filter(?,?, ?)', [alumnGroup, alumnLevel, userId]);
         return rows[0];
     }
 
@@ -53,11 +54,25 @@ class AlumnRepository
         return true;
     }
 
-    // Actualizar el estado de pago de un alumno
-    async updatePaymentStatus(id, userId, newStatus) 
+    // Actualizar el nivel de un alumno
+    async updateAlumnLevel(id, userId, newlevel) 
     {
-        await db.execute('CALL sp_update_payment_status(?, ?, ?)', [id, userId, newStatus]);
+        await db.execute('CALL sp_update_level(?, ?, ?)', [id, userId, newlevel]);
         return true;
+    }
+
+    // Actualizar el grupo de un alumno
+    async updateAlumnGroup(id, userId, newGroup)
+    {
+        await db.execute('CALL sp_update_group(?, ?, ?)', [id, userId, newGroup]);
+        return true;
+    } 
+
+    // Obtener los grupos existentes para un usuario específico
+    async getGroupsByUserId(userId) 
+    {
+        const [rows] = await db.execute('CALL sp_get_groups_by_user(?)', [userId]);
+        return rows[0];
     }
 }
 
