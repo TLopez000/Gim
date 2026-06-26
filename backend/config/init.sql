@@ -29,6 +29,7 @@ CREATE TABLE roles (
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
+    user_activity VARCHAR(20) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -49,7 +50,7 @@ CREATE TABLE alumns (
     alumn_name VARCHAR(100) NOT NULL,
     alumn_age INT NOT NULL,
     alumn_level VARCHAR(50) NOT NULL,
-    alumn_activity ENUM('Gimnasia','Atletismo','Futbol') NOT NULL,
+    alumn_activity ENUM('admin','Gimnasia','Acrodanza') NOT NULL,
     phone VARCHAR(20) NOT NULL,
     alumn_group VARCHAR(50) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -69,11 +70,11 @@ INSERT INTO roles (name) VALUES ('admin'), ('school');
 
 -- 8. Datos de prueba iniciales
 -- Usuario 'admin' (pass: 12345)
-INSERT INTO users (id, username, password) VALUES (1, 'admin', '$2b$10$.n0s847tiSxBqDvIo6Vg5ujXC5zIUmm98bTjBWnRdqX9CxxbIo7wS');
+INSERT INTO users (id, username, user_activity, password) VALUES (1, 'admin','admin', '$2b$10$.n0s847tiSxBqDvIo6Vg5ujXC5zIUmm98bTjBWnRdqX9CxxbIo7wS');
 INSERT INTO users_roles (user_id, role_id) VALUES (1, 1); -- Rol Admin
 
 -- Usuario 'Gimnasia' (pass: 12345)
-INSERT INTO users (id, username, password) VALUES (2, 'Gimnasia', '$2b$10$.n0s847tiSxBqDvIo6Vg5ujXC5zIUmm98bTjBWnRdqX9CxxbIo7wS');
+INSERT INTO users (id, username, user_activity, password) VALUES (2, 'Gymnastic', 'Gimnasia','$2b$10$.n0s847tiSxBqDvIo6Vg5ujXC5zIUmm98bTjBWnRdqX9CxxbIo7wS');
 INSERT INTO users_roles (user_id, role_id) VALUES (2, 2); -- Rol school
 
 -- Insercion de profesores
@@ -111,9 +112,20 @@ BEGIN
     WHERE u.username = p_username;
 END //
 
+-- Buscar usuario por actividad (con su rol)
+CREATE PROCEDURE sp_find_user_by_activity(IN p_activity VARCHAR(50))
+BEGIN
+    SELECT u.*, r.name as role 
+    FROM users u
+    JOIN users_roles ur ON u.id = ur.user_id
+    JOIN roles r ON ur.role_id = r.id
+    WHERE u.user_activity = p_activity;
+END //
+
 -- Crear nuevo usuario y asignar rol por nombre
 CREATE PROCEDURE sp_create_user(
     IN p_username VARCHAR(50), 
+    IN p_user_activity VARCHAR(20),
     IN p_password VARCHAR(255), 
     IN p_role_name VARCHAR(20)
 )
@@ -121,7 +133,7 @@ BEGIN
     DECLARE v_user_id INT;
     DECLARE v_role_id INT;
 
-    INSERT INTO users (username, password) VALUES (p_username, p_password);
+    INSERT INTO users (username, user_activity, password) VALUES (p_username,p_user_activity, p_password);
     SET v_user_id = LAST_INSERT_ID();
 
     SELECT id INTO v_role_id FROM roles WHERE name = p_role_name;

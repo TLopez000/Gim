@@ -3,9 +3,10 @@
  */
 
 // 1. COMPROBACIÓN ANTIPARPADEO INMEDIATA
+const role = localStorage.getItem('role');
 const token = localStorage.getItem('token');
 
-if (!token) {
+if (role != 'admin') {
     // Si no hay sesión, rebota al login sin mostrar nada
     window.location.href = '/login';
 } else {
@@ -136,10 +137,11 @@ if (registerForm) {
         e.preventDefault();
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
+        const user_activity = document.getElementById('user_activity').value;
 
         try {
             // El apiService adjuntará automáticamente el token del Admin si está en localStorage
-            await apiService.request('/admin/users/register', 'POST', { username, password });
+            await apiService.request('/admin/users/register', 'POST', { username, user_activity, password });
             showModal('¡Éxito!', 'Usuario creado correctamente.');
             setTimeout(() => { window.location.href = '/admin-Dashboard'; }, 2000); // Redirige al panel de admin en vez de login
         } catch (error) {

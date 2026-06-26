@@ -13,7 +13,7 @@ class AlumnController
         
         const { alumn_name, alumn_age, phone, alumn_activity, alumn_group, alumn_level } = req.body;
 
-        const schoolUser = await userRepo.findByUsername(alumn_activity); 
+        const schoolUser = await userRepo.findByActivity(alumn_activity); 
         
         // Validamos si la escuela existe en la BD
         if (!schoolUser) {

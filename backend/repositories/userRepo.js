@@ -9,13 +9,21 @@ class UserRepository
         const [rows] = await db.execute('CALL sp_find_user_by_username(?)', [username]);
         return rows[0][0]; 
     }
+    
+     // Buscar un usuario por su actividad de usuario
+    async findByActivity(activity) 
+    {
+        // El SP devuelve una lista; tomamos el primer elemento del primer conjunto de resultados
+        const [rows] = await db.execute('CALL sp_find_user_by_activity(?)', [activity]);
+        return rows[0][0]; 
+    }
 
     // Crear un nuevo usuario y asignar su rol en una sola operación atómica
-    async create(username, hashedPassword, role)  
+    async create(username, user_activity, hashedPassword, role)  
     {
         const [rows] = await db.execute(
-            'CALL sp_create_user(?, ?, ?)',
-            [username, hashedPassword, role]
+            'CALL sp_create_user(?, ?, ?, ?)',
+            [username, user_activity, hashedPassword, role]
         );
         // El SP realiza un SELECT v_user_id as insertId al final
         return rows[0][0].insertId;
