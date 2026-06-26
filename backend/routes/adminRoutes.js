@@ -13,6 +13,7 @@ const { verifyToken, isAdmin } = require('../middleware/authMiddleware');
 router.use(verifyToken, isAdmin);
 
 router.get('/users', adminController.getAllUsers);
+router.post('/users/register', adminController.registerUser);
 router.delete('/users/:id', adminController.deleteUser);
 
 module.exports = router;

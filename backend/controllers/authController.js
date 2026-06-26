@@ -10,48 +10,6 @@ const { SECRET_KEY } = require('../middleware/authMiddleware');
 
 class AuthController 
 {
-    // Registro de usuarios
-    async register(req, res) 
-    {
-        try 
-        {
-            const { username, password } = req.body;
-
-            // 1. Validación de presencia
-            if (!username || !password) {
-                return res.status(400).json({ message: "Usuario y contraseña son requeridos." });
-            }
-
-            // Validación del test2 (largo de contraseña)
-            if (password.length < 6) {
-                return res.status(400).json({ message: "La contraseña es demasiado corta" });
-            }
-
-
-            const hashedPassword = await bcrypt.hash(password, 10);            
-            
-            // 2. Creación mediante el repositorio (que usa el SP sp_create_user)
-            const userId = await userRepo.create(username, hashedPassword, 'school'); // Por defecto, todos los usuarios registrados son 'teacher'
-            
-            res.status(201).json({ 
-                message: "Usuario registrado con éxito.", 
-                userId 
-            });
-        }
-        catch (error)
-        {
-            // 3. Manejo de error específico: Usuario Duplicado (Código ER_DUP_ENTRY en MySQL)
-            if (error.code === 'ER_DUP_ENTRY') {
-                return res.status(409).json({ message: "El nombre de usuario ya existe." });
-            }
-
-            res.status(500).json({ 
-                message: "Error interno durante el registro.", 
-                error: error.message 
-            });
-        }
-    }
-
     // Inicio de sesión
     async login(req, res) 
     {
