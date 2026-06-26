@@ -2,39 +2,65 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GIMNASTIC - Login</title>
     <link rel="stylesheet" href="../css/w3.css">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="icon" type="image/png" href="../img/favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="w3-display-container" style="height:100vh;">
+<body style="background-color: #121212; font-family: sans-serif; margin: 0; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 16px;">
 
-    <div class="w3-display-middle w3-mobile" style="width:400px;">
-        <div class="w3-card-4 vault-card w3-padding-large w3-round-large">
-            <h2 class="w3-center w3-text-red"><b>GIMNASTIC</b></h2>
-            <p class="w3-center">Ingresa a tu lista de alumnos</p>
+    <div class="w3-mobile" style="width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 20px; margin-bottom: 80px;">
+        
+        <div class="vault-card w3-padding-large" style="background-color: #1e1e1e; border-radius: 12px; border: 1px solid #2a2a2a; box-shadow: 0 8px 24px rgba(0,0,0,0.6);">
+            <h2 class="w3-center w3-text-red" style="margin-top: 10px; font-weight: bold; letter-spacing: 1px;"><b>GIMNASTIC</b></h2>
+            <p class="w3-center w3-text-grey" style="font-size: 0.9em; margin-bottom: 25px;">Login - Panel de Profesores</p>
             
             <form id="loginForm">
-                <label>Usuario</label>
-                <input class="w3-input w3-border w3-round w3-transparent w3-text-white" type="text" id="username" required>
+                <div style="margin-bottom: 16px;">
+                    <label class="w3-text-grey" style="font-size: 0.85em; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Usuario</label>
+                    <input class="w3-input w3-border w3-round w3-transparent w3-text-white" type="text" id="username" required style="border-color: #444 !important; height: 42px; margin-top: 5px;">
+                </div>
                 
-                <br>
-                <label>Contraseña</label>
-                <input class="w3-input w3-border w3-round w3-transparent w3-text-white" type="password" id="password" required>
+                <div style="margin-bottom: 24px;">
+                    <label class="w3-text-grey" style="font-size: 0.85em; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Contraseña</label>
+                    <input class="w3-input w3-border w3-round w3-transparent w3-text-white" type="password" id="password" required style="border-color: #444 !important; height: 42px; margin-top: 5px;">
+                </div>
                 
-                <br>
-                <button type="submit" class="w3-button w3-red w3-block w3-round-large"><b>ENTRAR</b></button>
+                <button type="submit" class="w3-button w3-red w3-block w3-round-large" style="height: 45px; font-weight: bold; font-size: 1em; letter-spacing: 0.5px; transition: 0.2s;">
+                    ENTRAR
+                </button>
             </form>
-            
-            <p class="w3-small w3-center">¿No tienes cuenta? <a href="/register" class="w3-text-red">Regístrate</a></p>
         </div>
 
-        <div class="w3-card-4 vault-card w3-padding-large w3-round-large w3-center">
-          <a href="/inscript-Dashboard" class="w3-button w3-red w3-block w3-round-large w3-large">
-            <b>INSCRIPCIONES</b>
-          </a>
+        <div class="vault-card w3-padding-large w3-center" style="background-color: #1e1e1e; border-radius: 12px; border: 1px solid #2a2a2a; box-shadow: 0 4px 12px rgba(0,0,0,0.4);">
+           <a href="/inscript-Dashboard" class="w3-button w3-red w3-block w3-round-large" style="height: 55px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.3em; letter-spacing: 1.5px; transition: 0.2s; box-shadow: 0 0 15px rgba(255, 77, 77, 0.4);">
+           INSCRIPCIONES
+           </a>
         </div>
+
     </div>
+
+    <footer style="position: absolute; bottom: 0; left: 0; width: 100%; background-color: #1a1a1a; border-top: 1px solid #2a2a2a; padding: 15px 0; text-align: center;">
+        <div style="max-width: 400px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+            <span class="w3-text-grey" style="font-size: 0.8em; font-weight: bold; letter-spacing: 1px;">CONTACTO</span>
+            
+            <div style="display: flex; justify-content: center; gap: 16px;">
+                <a href="https://instagram.com/Gymnastic_training" target="_blank" class="w3-button w3-red w3-circle" style="width:42px; height:42px; display: flex; align-items: center; justify-content: center; padding: 0;" title="Instagram">
+                    <i class="fab fa-instagram w3-large"></i>
+                </a>
+
+                <a href="mailto:tomilopez555@gmail.com" class="w3-button w3-red w3-circle" style="width:42px; height:42px; display: flex; align-items: center; justify-content: center; padding: 0;" title="Correo Electrónico">
+                    <i class="far fa-envelope w3-large"></i>
+                </a>
+
+                <a href="https://wa.me/tuNumeroDeTelefono" target="_blank" class="w3-button w3-red w3-circle" style="width:42px; height:42px; display: flex; align-items: center; justify-content: center; padding: 0;" title="WhatsApp / Teléfono">
+                    <i class="fas fa-phone-alt w3-large"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
 
     <script src="../js/services/apiService.js"></script>
     <script src="../js/components/uiHandlers.js"></script>

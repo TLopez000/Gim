@@ -2,31 +2,68 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GIMNASTIC - Registro</title>
+    <!-- Hojas de estilo locales -->
     <link rel="stylesheet" href="../css/w3.css">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="icon" type="image/png" href="../img/favicon.png">
+    <!-- Iconos Font Awesome (v6) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="w3-display-container" style="height:100vh;">
-    <div class="w3-display-middle w3-mobile" style="width:400px;">
-        <div class="w3-card-4 vault-card w3-padding-large w3-round-large">
-            <h2 class="w3-center w3-text-yellow"><b>CREAR CUENTA</b></h2>
-            <form id="registerForm">
-                <label>Nombre de Usuario</label>
-                <input class="w3-input w3-border w3-round w3-transparent w3-text-white" type="text" id="username" required>
-                <br>
-                <label>Contraseña</label>
-                <input class="w3-input w3-border w3-round w3-transparent w3-text-white" type="password" id="password" required>
-                <br>
-                <button type="submit" class="w3-button w3-yellow w3-block w3-round-large"><b>REGISTRARSE</b></button>
-            </form>
-            <p class="w3-small w3-center">¿Ya tienes cuenta? <a href="/login" class="w3-text-yellow">Inicia Sesión</a></p>
-        </div>
+<body id='pagebody'; style="background-color: #121212; font-family: sans-serif; margin: 0; min-height: 100vh; display: none; flex-direction: column;">
+
+    <!-- BARRA SUPERIOR CON BOTÓN DE RETORNO -->
+    <div style="height: 60px; display: flex; align-items: center; padding: 0 24px; position: absolute; width: 100%; box-sizing: border-box;">
+        <a href="/admin-Dashboard" class="w3-button w3-black w3-border w3-border-yellow w3-text-yellow w3-round" style="font-size: 0.85em; font-weight: bold; padding: 8px 16px; text-decoration: none; transition: 0.2s; display: flex; align-items: center; gap: 8px;">
+            <i class="fas fa-arrow-left"></i> Panel Admin
+        </a>
     </div>
 
+    <!-- CONTENEDOR PRINCIPAL CENTRADO -->
+    <div class="w3-container" style="flex: 1; display: flex; justify-content: center; align-items: center; padding: 24px 16px;">
+        
+        <!-- Tarjeta del Formulario (Optimizada para móviles y PC) -->
+        <div class="w3-mobile" style="width: 100%; max-width: 400px;">
+            <div class="vault-card w3-padding-large" style="background-color: #1e1e1e; border-radius: 12px; border: 1px solid #2a2a2a; box-shadow: 0 8px 24px rgba(0,0,0,0.6);">
+                
+                <!-- Encabezado de la Tarjeta -->
+                <div style="text-align: center; margin-bottom: 24px;">
+                    <i class="fas fa-shield-halved w3-text-yellow" style="font-size: 2.5em; margin-bottom: 12px;"></i>
+                    <h2 class="w3-text-yellow" style="margin: 0; font-weight: 800; letter-spacing: 1px; font-size: 1.8em;">CREAR CUENTA</h2>
+                    <p class="w3-text-grey" style="margin: 4px 0 0 0; font-size: 0.9em;">Registrar nuevo acceso al sistema</p>
+                </div>
+
+                <!-- Formulario -->
+                <form id="registerForm" style="display: flex; flex-direction: column; gap: 18px;">
+                    
+                    <!-- Campo: Usuario -->
+                    <div>
+                        <label class="w3-text-grey" style="font-size: 0.85em; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Nombre de Usuario</label>
+                        <input class="w3-input w3-border w3-round w3-transparent w3-text-white" type="text" id="username" required style="border-color: #444 !important; height: 42px; margin-top: 6px; padding: 8px 12px;">
+                    </div>
+                    
+                    <!-- Campo: Contraseña -->
+                    <div>
+                        <label class="w3-text-grey" style="font-size: 0.85em; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Contraseña</label>
+                        <input class="w3-input w3-border w3-round w3-transparent w3-text-white" type="password" id="password" required style="border-color: #444 !important; height: 42px; margin-top: 6px; padding: 8px 12px;">
+                    </div>
+
+                    <!-- Botón de Registro -->
+                    <button type="submit" class="w3-button w3-yellow w3-block w3-round-large" style="height: 46px; font-weight: bold; font-size: 1em; letter-spacing: 1px; margin-top: 8px; transition: 0.2s; box-shadow: 0 4px 12px rgba(255, 202, 40, 0.2);">
+                        REGISTRAR
+                    </button>
+                </form>
+                
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- SCRIPTS DE LA APLICACIÓN -->
     <script src="../js/services/apiService.js"></script>
     <script src="../js/components/uiHandlers.js"></script>
     <script src="../js/utils/authHelper.js"></script>
-    <script src="../js/frontControllers/authFrontController.js"></script>
+    <script src="../js/frontControllers/adminFrontController.js"></script>
 </body>
 </html>

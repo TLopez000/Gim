@@ -2,41 +2,71 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GIMNASTIC - Admin Panel</title>
+    <!-- Hojas de estilo locales -->
     <link rel="stylesheet" href="../css/w3.css">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="icon" type="image/png" href="../img/favicon.png">
+    <!-- Iconos Font Awesome (v6) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
+<body id="pagebody"; style="background-color: #121212; font-family: sans-serif; margin: 0; padding: 0; display: none;">
 
-<div class="w3-bar w3-yellow w3-card">
-    <span class="w3-bar-item"><b>CONTROL DE ADMINISTRACIÓN</b></span>
-    <button class="w3-bar-item w3-button w3-right btn-logout">Salir</button>
-</div>
-
-<div class="w3-container w3-padding-32">
-    <h2 class="w3-text-white">Panel de Admin</h2>
-
-    <div class="w3-responsive">
-        <table class="w3-table w3-striped w3-bordered vault-card">
-            <thead>
-                <tr class="w3-dark-grey">
-                    <th>ID</th>
-                    <th>Username</th>
-                    <th>Rol</th>
-                    <th>Fecha Registro</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="usersTableBody">
-                </tbody>
-        </table>
+    <!-- BARRA DE NAVEGACIÓN -->
+    <div class="w3-bar w3-black w3-border-bottom w3-border-dark-grey" style="height: 50px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px;">
+        <span class="w3-text-yellow" style="font-size: 1.2em; font-weight: bold; letter-spacing: 1px;">
+            <i class="fas fa-shield-alt" style="margin-right: 8px;"></i>CONTROL DE ADMINISTRACIÓN
+        </span>
+        
+        <!-- Grupo de botones a la derecha -->
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <!-- BOTÓN SOLICITADO: Registrar Nuevo Usuario -->
+            <a href="/register" class="w3-button w3-black w3-border w3-border-yellow w3-text-yellow w3-round" style="font-size: 0.85em; font-weight: bold; padding: 6px 14px; text-decoration: none; transition: 0.2s;">
+                <i class="fas fa-user-plus" style="margin-right: 6px;"></i> Registrar Usuario
+            </a>
+            
+            <button class="w3-button w3-round w3-hover-yellow btn-logout" style="color: #ccc; font-weight: bold; background: transparent; font-size: 0.85em; transition: 0.2s;">
+                Salir
+            </button>
+        </div>
     </div>
-</div>
 
-<script src="../js/services/apiService.js"></script>
-<script src="../js/utils/authHelper.js"></script>
-<script src="../js/components/uiHandlers.js"></script>
-<script src="../js/frontControllers/adminFrontController.js"></script>
+    <!-- CONTENEDOR PRINCIPAL DEL LISTADO -->
+    <div class="w3-container w3-padding-32">
+        <div style="max-width: 1200px; margin: 0 auto; width: 100%; padding: 0 16px;">
+            
+            <!-- Encabezado del Listado -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <h3 class="w3-text-white" style="margin: 0; font-weight: 600; letter-spacing: 0.5px;">Panel de Admin</h3>
+                <span class="w3-text-grey" style="font-size: 0.9em;">Gestión de Usuarios</span>
+            </div>
+            
+            <!-- Contenedor responsive moderno -->
+            <div class="w3-responsive" style="border-radius: 12px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.6); border: 1px solid #2a2a2a;">
+                <table class="w3-table w3-text-white" style="background-color: #1e1e1e; border-collapse: collapse; width: 100%;">
+                    <thead>
+                        <tr style="background-color: #252525; border-bottom: 2px solid #333;">
+                            <th style="padding: 16px; font-weight: 600; color: #ffca28; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px; width: 10%;">ID</th>
+                            <th style="padding: 16px; font-weight: 600; color: #aaa; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px;">Username</th>
+                            <th style="padding: 16px; font-weight: 600; color: #aaa; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px;">Rol</th>
+                            <th style="padding: 16px; font-weight: 600; color: #aaa; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px;">Fecha Registro</th>
+                            <th style="padding: 16px; font-weight: 600; color: #ffca28; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px; text-align: center; width: 15%;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <!-- Las filas dinámicas desde JS se inyectarán aquí -->
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SCRIPTS DE LA APLICACIÓN -->
+    <script src="../js/services/apiService.js"></script>
+    <script src="../js/utils/authHelper.js"></script>
+    <script src="../js/components/uiHandlers.js"></script>
+    <script src="../js/frontControllers/adminFrontController.js"></script>
 </body>
 </html>

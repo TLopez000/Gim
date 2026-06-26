@@ -2,79 +2,92 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GIMNASTIC - Panel de Profesores</title>
     <link rel="stylesheet" href="../css/w3.css">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="icon" type="image/png" href="../img/favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-<body>
+<body style="background-color: #121212; font-family: sans-serif; margin: 0; padding: 0;">
 
-<div class="w3-bar w3-black w3-border-bottom w3-border-dark-grey">
-    <span class="w3-bar-item w3-text-red"><b>GIMNASTIC</b></span>
-    <button class="w3-bar-item w3-button w3-right btn-logout">Salir</button>
-</div>
+    <div class="w3-bar w3-black w3-border-bottom w3-border-dark-grey" style="height: 50px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px;">
+        <span class="w3-text-red" style="font-size: 1.2em; font-weight: bold; letter-spacing: 1px;">GIMNASTIC - Panel de Control</span>
+        <button class="w3-button w3-round w3-hover-red btn-logout" style="color: #ccc; font-weight: bold; background: transparent;">
+            Salir
+        </button>
+    </div>
 
-<div class="w3-container w3- w3-padding-32">
-        
-            <div class="w3-col l4 m5 s12">
-                <div class="w3-card-4 vault-card w3-padding w3-round">
-                    <h3 class="w3-text-red">Buscar</h3>
-                    <form id="searchForm">
-                        <label>Grupo de clases</label>
-                        <select class="w3-input w3-border w3-round w3-text-white" id="selectGroup" style="background-color: #333;">
-                          <option value="all">Seleccionar profe</option>
-                          <option value="Ludmila">Ludmila</option>
-                          <option value="Messi">Messi</option>
-                        </select>
-                        <label>Nivel</label>
-                         <select id="selectLevel" class="w3-input w3-border w3-round">
-                             <option value=0 selected>Todos</option>
-                             <option value=1>1</option>
-                             <option value=2>2</option>
-                             <option value=3>3</option>
-                             <option value=4>4</option>
-                             <option value=5>5</option>
-                             <option value=6>6</option>
-                             <option value=7>7</option>
-                             <option value=8>8</option>
-                             <option value=9>9</option>
-                             <option value=10>10</option>
-                        </select> 
-                        <button type="submit" class="w3-button w3-red w3-block w3-round-large w3-margin-top">
-                            <b>BUSCAR</b>
-                        </button>
-                        <button type="button" id="btnClearFilter" class="w3-button w3-red w3-block w3-round-large w3-margin-top">
-                            <b>BORRAR FILTRO</b>
-                        </button>
-                    </form>
-                </div>
-           </div>
+    <div class="w3-row w3-padding-16 w3-border-bottom" style="background-color: #1a1a1a; border-color: #2a2a2a !important; display: flex; align-items: center; justify-content: center; width: 100%;">
+        <form id="searchForm" style="display: flex; flex-wrap: wrap; align-items: center; gap: 15px; width: 100%; margin: 0 auto; padding: 0 16px; justify-content: center;">
+            
+            <div style="flex: 1; min-width: 200px; max-width: max-content; display: flex; align-items: center; gap: 10px;">
+                <label class="w3-text-grey" style="white-space: nowrap; font-size: 0.9em; font-weight: bold;">Profe:</label>
+                <select class="w3-input w3-border w3-round w3-text-white" id="selectGroup" style="background-color: #2b2b2b; border-color: #444; height: 38px; padding: 6px 12px;">
+                    <option value="all">Todos</option>
+                    <option value="Ludmila">Ludmila</option>
+                    <option value="Messi">Messi</option>
+                </select>
+            </div>
 
-        <div class="w3-col l8 m7 s12">
-            <h3 class="w3-text-white">Mi listado</h3>
-            <div class="w3-responsive">
-                <table class="w3-table w3-striped w3-bordered vault-card">
+            <div style="flex: 1; min-width: 140px; max-width: max-content; display: flex; align-items: center; gap: 10px;">
+                <label class="w3-text-grey" style="white-space: nowrap; font-size: 0.9em; font-weight: bold;">Nivel:</label>
+                <select id="selectLevel" class="w3-input w3-border w3-round w3-text-white" style="background-color: #2b2b2b; border-color: #444; height: 38px; padding: 6px 12px;">
+                    <option value="0" selected>Todos</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select> 
+            </div>
+
+            <button type="submit" class="w3-button w3-red w3-round" style="height: 38px; width: 45px; display: flex; align-items: center; justify-content: center; transition: 0.2s;">
+                <i class="fa fa-search" style="font-size: 1.1em;"></i>
+            </button>
+
+            <button type="button" id="btnClearFilter" class="w3-button w3-black w3-border w3-border-red w3-text-red w3-round" style="height: 38px; padding: 0 16px; font-size: 0.85em; font-weight: bold; transition: 0.2s;">
+                BORRAR FILTRO
+            </button>
+            
+        </form>
+    </div>
+
+    <div class="w3-container w3-padding-32">
+        <div style="max-width: 1200px; margin: 0 auto; width: 100%; padding: 0 16px;">
+            
+            <div style="display: flex; text-align: center; justify-content: center; align-items: center; margin-bottom: 24px;">
+                <h3 class="w3-text-white" style="margin: 0; font-weight: 600; letter-spacing: 0.5px;">Listado de Alumnos</h3>
+            </div>
+            
+            <div class="w3-responsive" style="border-radius: 12px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.6); border: 1px solid #2a2a2a;">
+                <table class="w3-table w3-text-white" style="background-color: #1e1e1e; border-collapse: collapse; width: 100%;">
                     <thead>
-                        <tr class="w3-red w3-text-white">
-                            <th>Nombre</th>
-                            <th>Edad</th>
-                            <th>Grupo de clases</th>
-                            <th>Nivel</th>
-                            <th>Teléfono</th>
-                            <th>Acciones</th>
+                        <tr style="background-color: #252525; border-bottom: 2px solid #333;">
+                            <th style="padding: 16px; font-weight: 600; color: #ff4d4d; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px;">Nombre</th>
+                            <th style="padding: 16px; font-weight: 600; color: #aaa; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px;">Edad</th>
+                            <th style="padding: 16px; font-weight: 600; color: #aaa; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px;">Grupo de clases</th>
+                            <th style="padding: 16px; font-weight: 600; color: #aaa; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px;">Nivel</th>
+                            <th style="padding: 16px; font-weight: 600; color: #aaa; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px;">Teléfono</th>
+                            <th style="padding: 16px; font-weight: 600; color: #ff4d4d; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px; text-align: center;">Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="alumnsTableBody">
                         </tbody>
                 </table>
             </div>
+
         </div>
     </div>
-</div>
 
-<script src="../js/services/apiService.js"></script>
-<script src="../js/components/uiHandlers.js"></script>
-<script src="../js/utils/authHelper.js"></script>
-<script src="../js/frontControllers/alumnFrontController.js"></script>
+    <script src="../js/services/apiService.js"></script>
+    <script src="../js/components/uiHandlers.js"></script>
+    <script src="../js/utils/authHelper.js"></script>
+    <script src="../js/frontControllers/alumnFrontController.js"></script>
 </body>
 </html>

@@ -34,26 +34,3 @@ if (loginForm)
     });
 }
 
-// Lógica para el formulario de REGISTRO
-const registerForm = document.getElementById('registerForm');
-if (registerForm) 
-{
-    registerForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-
-        try 
-        {
-            await apiService.request('/auth/register', 'POST', { username, password });
-            // En lugar de alert...
-            showModal('¡Éxito!', 'Usuario creado. Ahora puedes iniciar sesión.');
-            // Esperar un momento o usar el botón del modal para redirigir
-            setTimeout(() => { window.location.href = '/login'; }, 2000);
-        }
-        catch (error)
-        {
-            showModal('Error de Registro', error.message);
-        }
-    });
-}

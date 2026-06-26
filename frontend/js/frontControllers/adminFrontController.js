@@ -1,18 +1,39 @@
 /**
- * adminFrontController.js
- * Gestión de la interfaz de administración (Usuarios)
+ * adminFrontController.js (o adminController.js en el frontend)
  */
 
-// Al cargar la página, cargar todos los usuarios con sus datos
-document.addEventListener('DOMContentLoaded', loadUsers);
+// 1. COMPROBACIÓN ANTIPARPADEO INMEDIATA
+const token = localStorage.getItem('token');
+
+if (!token) {
+    // Si no hay sesión, rebota al login sin mostrar nada
+    window.location.href = '/login';
+} else {
+    // Si hay sesión, esperamos a que cargue el HTML para activar la vista correspondiente
+    document.addEventListener('DOMContentLoaded', () => {
+        const body = document.getElementById('pagebody');
+        
+        if (body) {
+            // DETECTAMOS QUÉ PÁGINA ES:
+            // Si en el HTML existe la tabla de usuarios, es el Panel de Admin
+            if (document.getElementById('usersTableBody')) {
+                body.style.display = 'block'; // Display normal para listas
+                loadUsers(); // Tu función existente que carga la tabla
+            } 
+            // Si existe el formulario de registro, es la página de Register
+            else if (document.getElementById('registerForm')) {
+                body.style.display = 'flex'; // Display flex para centrar el formulario
+            }
+        }
+    });
+}
+
 
 async function loadUsers() {
     try {
-        // Asumimos un endpoint GET /api/admin/users que crearemos en el backend
         const users = await apiService.request('/admin/users', 'GET');
         renderUsersTable(users);
     } catch (error) {
-        // Usamos el componente modal para errores de acceso
         showModal('Acceso denegado', error.message);
         window.location.href = '/login';
     }
@@ -23,74 +44,106 @@ async function loadUsers() {
  */
 function renderUsersTable(users) {
     const tbody = document.getElementById('usersTableBody');
+    if (!tbody) return; // Salvaguarda extra
     
-    // Limpiamos la tabla de forma eficiente y segura
     tbody.replaceChildren();
 
     users.forEach(u => {
         const row = document.createElement('tr');
+        row.style.borderBottom = "1px solid #2a2a2a";
+        row.style.transition = "background 0.2s ease";
+        row.onmouseover = () => row.style.backgroundColor = '#292929';
+        row.onmouseout = () => row.style.backgroundColor = 'transparent';
 
         // Celda ID
         const tdId = document.createElement('td');
+        tdId.style.padding = "16px";
+        tdId.style.verticalAlign = "middle";
         tdId.textContent = u.id;
 
-        // Celda Username (usando <b> para resaltar)
+        // Celda Username
         const tdUser = document.createElement('td');
+        tdUser.style.padding = "16px";
+        tdUser.style.verticalAlign = "middle";
         const b = document.createElement('b');
         b.textContent = u.username;
         tdUser.appendChild(b);
 
-        // Celda Rol (con estilos de W3.CSS)
+        // Celda Rol (Estilizada en sintonía con el nuevo panel)
         const tdRole = document.createElement('td');
+        tdRole.style.padding = "16px";
+        tdRole.style.verticalAlign = "middle";
         const spanRole = document.createElement('span');
-        spanRole.className = "w3-tag w3-blue";
+        spanRole.style.backgroundColor = "rgba(255, 202, 40, 0.15)";
+        spanRole.style.color = "#ffca28";
+        spanRole.style.padding = "4px 10px";
+        spanRole.style.borderRadius = "20px";
+        spanRole.style.fontWeight = "bold";
+        spanRole.style.fontSize = "0.85em";
         spanRole.textContent = u.role;
         tdRole.appendChild(spanRole);
 
         // Celda Fecha de Registro
         const tdDate = document.createElement('td');
+        tdDate.style.padding = "16px";
+        tdDate.style.color = "#ccc";
+        tdDate.style.verticalAlign = "middle";
         tdDate.textContent = new Date(u.created_at).toLocaleDateString();
 
-        // Celda Acciones (Botón de baneo)
+        // Celda Acciones
         const tdActions = document.createElement('td');
+        tdActions.style.padding = "16px";
+        tdActions.style.textAlign = "center";
+        tdActions.style.verticalAlign = "middle";
+        
         const btnBan = document.createElement('button');
-        btnBan.className = "w3-button w3-red w3-tiny";
-        btnBan.textContent = "Elminar usuario y sus samples";
+        btnBan.className = "w3-button w3-round-large";
+        btnBan.style.backgroundColor = "#ff4d4d";
+        btnBan.style.color = "white";
+        btnBan.style.padding = "6px 14px";
+        btnBan.style.fontSize = "0.85em";
+        btnBan.style.fontWeight = "bold";
+        btnBan.style.border = "none";
+        btnBan.style.cursor = "pointer";
+        btnBan.textContent = "Eliminar";
         
-        // Evento nativo en lugar de onclick inline
         btnBan.addEventListener('click', () => banUser(u.id));
-        
         tdActions.appendChild(btnBan);
 
-        // Construcción de la fila inyectando todos los nodos
         row.append(tdId, tdUser, tdRole, tdDate, tdActions);
-        
-        // Inyección en el DOM
         tbody.appendChild(row);
     });
 }
 
-/**
- * Función para borrar usuarios (borrado lógico/físico en el sistema)
- */
 async function banUser(id) {
-    // 1. Confirmación de seguridad
-    if (!confirm('¿Estás seguro de borrar a este usuario? Se borrarán todos sus samples de forma permanente.'))
-    {
+    if (!confirm('¿Estás seguro de borrar a este usuario? Se borrarán todos sus datos de forma permanente.')) {
         return;
     }
 
-    try
-    {
-        // 2. Llamada al backend
+    try {
         await apiService.request(`/admin/users/${id}`, 'DELETE');
-        
-        // 3. Notificación y refresco de la tabla
         showModal('Éxito', 'Usuario eliminado con éxito');
         loadUsers(); 
-    }
-    catch (error)
-    {
+    } catch (error) {
         showModal('Error al borrar usuario', error.message);
     }
+}
+
+// Lógica para el formulario de REGISTRO
+const registerForm = document.getElementById('registerForm');
+if (registerForm) {
+    registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            // El apiService adjuntará automáticamente el token del Admin si está en localStorage
+            await apiService.request('/admin/users/register', 'POST', { username, password });
+            showModal('¡Éxito!', 'Usuario creado correctamente.');
+            setTimeout(() => { window.location.href = '/admin-Dashboard'; }, 2000); // Redirige al panel de admin en vez de login
+        } catch (error) {
+            showModal('Error de Registro', error.message);
+        }
+    });
 }
