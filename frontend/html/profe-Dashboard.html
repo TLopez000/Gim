@@ -18,7 +18,7 @@
         </button>
     </div>
 
-    <div class="w3-row w3-padding-16 w3-border-bottom" style="background-color: #1a1a1a; border-color: #2a2a2a !important; display: flex; align-items: center; justify-content: center; width: 100%;">
+    <div id="filterSection" class="w3-row w3-padding-16 w3-border-bottom" style="background-color: #1a1a1a; border-color: #2a2a2a !important; display: flex; align-items: center; justify-content: center; width: 100%;">
         <form id="searchForm" style="display: flex; flex-wrap: wrap; align-items: center; gap: 15px; width: 100%; margin: 0 auto; padding: 0 16px; justify-content: center;">
             
             <div style="flex: 1; min-width: 200px; max-width: max-content; display: flex; align-items: center; gap: 10px;">
@@ -61,11 +61,30 @@
     <div class="w3-container w3-padding-32">
         <div style="max-width: 1200px; margin: 0 auto; width: 100%; padding: 0 16px;">
             
-            <div style="display: flex; text-align: center; justify-content: center; align-items: center; margin-bottom: 24px;">
-                <h3 class="w3-text-white" style="margin: 0; font-weight: 600; letter-spacing: 0.5px;">Listado de Alumnos</h3>
+            <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 32px;">
+                <button id="btnViewAlumns" class="w3-button w3-red w3-round-large" style="font-weight: bold; padding: 10px 24px; transition: 0.2s;">
+                    <i class="fa fa-user" style="margin-right: 8px;"></i> ALUMNOS
+                </button>
+                <button id="btnViewTeachers" class="w3-button w3-black w3-border w3-border-dark-grey w3-text-grey w3-round-large" style="font-weight: bold; padding: 10px 24px; transition: 0.2s;">
+                    <i class="fa fa-vcard-o" style="margin-right: 8px;"></i> PROFESORES
+                </button>
             </div>
             
-            <div class="w3-responsive" style="border-radius: 12px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.6); border: 1px solid #2a2a2a;">
+            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 24px; gap: 15px;">
+                <h3 id="tableTitle" class="w3-text-white" style="margin: 0; font-weight: 600; letter-spacing: 0.5px;">Listado de Alumnos</h3>
+                
+                <form id="addTeacherForm" class="w3-hide" style="display: flex; align-items: center; gap: 10px;">
+                    <input type="text" id="teacherName" class="w3-input w3-border w3-round w3-text-white" 
+                           style="background-color: #2b2b2b; border-color: #444; height: 38px; width: 220px; padding: 6px 12px;" 
+                           placeholder="Nombre del nuevo profesor..." required>
+                    
+                    <button type="submit" class="w3-button w3-red w3-round" style="height: 38px; font-weight: bold; font-size: 0.9em; white-space: nowrap;">
+                        <i class="fa fa-plus" style="margin-right: 5px;"></i> Añadir Profesor
+                    </button>
+                </form>
+            </div>
+            
+            <div id="containerAlumns" class="w3-responsive" style="border-radius: 12px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.6); border: 1px solid #2a2a2a;">
                 <table class="w3-table w3-text-white" style="background-color: #1e1e1e; border-collapse: collapse; width: 100%;">
                     <thead>
                         <tr style="background-color: #252525; border-bottom: 2px solid #333;">
@@ -77,8 +96,20 @@
                             <th style="padding: 16px; font-weight: 600; color: #ff4d4d; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px; text-align: center;">Acciones</th>
                         </tr>
                     </thead>
-                    <tbody id="alumnsTableBody">
-                        </tbody>
+                    <tbody id="alumnsTableBody"></tbody>
+                </table>
+            </div>
+
+            <div id="containerTeachers" class="w3-responsive w3-hide" style="border-radius: 12px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.6); border: 1px solid #2a2a2a;">
+                <table class="w3-table w3-text-white" style="background-color: #1e1e1e; border-collapse: collapse; width: 100%;">
+                    <thead>
+                        <tr style="background-color: #252525; border-bottom: 2px solid #333;">
+                            <th style="padding: 16px; font-weight: 600; color: #ff4d4d; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px;">Profesor</th>
+                            <th style="padding: 16px; font-weight: 600; color: #aaa; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px;">Alumnos Activos</th>
+                            <th style="padding: 16px; font-weight: 600; color: #ff4d4d; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px; text-align: center;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teachersTableBody"></tbody>
                 </table>
             </div>
 
