@@ -1,6 +1,5 @@
 
 const alumnRepo = require('../repositories/alumnRepo');
-
 const userRepo = require('../repositories/userRepo');
 
 
@@ -54,23 +53,12 @@ class AlumnController
     }
 };
     
-   // Obtener grupos disponibles o existentes
-   async getGroups(req, res) {
-    try {
-        const userId = req.userId; // Id proveniente de la sesion iniciada
-        const groups = await alumnRepo.getGroupsByUserId(userId);
-        res.json(groups);
-    } catch (error) {
-        res.status(500).json({ message: "Error al recuperar los grupos.", error: error.message });
-    }
-}
-
     // Listar alumnos
     async getMyAlumns(req, res)
     {
         try
         {
-            // El SP sp_find_samples_by_user filtra automáticamente por user_id
+            // El SP sp_find_alumns_by_user filtra automáticamente por user_id
             const alumns = await alumnRepo.findByUserId(req.userId);
             res.json(alumns);
         }

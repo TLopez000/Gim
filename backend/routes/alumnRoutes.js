@@ -9,7 +9,6 @@ router.use(verifyToken);
 // 1. RUTAS ESPECÍFICAS (Van primero)
 
 router.get('/my-alumns', alumnController.getMyAlumns);
-router.get('/groups', alumnController.getGroups);
 router.put('/update-level/:id', alumnController.updateAlumnLevel);
 router.put('/update-group/:id', alumnController.updateAlumnGroup);
 

@@ -38,6 +38,8 @@ const alumnRoutes = require('./routes/alumnRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const inscriptRoutes = require('./routes/inscriptRoutes');
 const viewRoutes = require('./routes/viewRoutes');
+const teacherRoutes = require('./routes/teacherRoutes');
+
 //const testsRoutes = require('./routes/testsRoutes');
 
 const app = express();
@@ -56,9 +58,10 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 
 // --- Registrar rutas de la API ---
 app.use('/api/auth', authRoutes);
-app.use('/api/alumnos/inscript', inscriptRoutes);
-app.use('/api/alumnos', alumnRoutes);
+app.use('/api/alumnos/inscript', inscriptRoutes); // ruta publica
+app.use('/api/alumnos', alumnRoutes);  // ruta protegida, requiere token
 app.use('/api/admin', adminRoutes);
+app.use('/api/teachers', teacherRoutes);
 
 
 // --- Registrar rutas de Navegación del Frontend ---

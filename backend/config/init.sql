@@ -232,6 +232,29 @@ BEGIN
 END //
 
 
+-- PROCEDIMIENTOS PARA TEACHERS --
+
+-- Crear un teacher
+CREATE PROCEDURE sp_create_teacher(
+    IN p_user_id INT,
+    IN p_teacher_name VARCHAR(100)
+)
+BEGIN
+    INSERT INTO teachers (user_id, teacher_name) VALUES (p_user_id, p_teacher_name);
+    SELECT LAST_INSERT_ID() as insertId;
+END //
+
+-- Borrar un teacher
+CREATE PROCEDURE sp_delete_teacher(IN p_id INT)
+BEGIN
+    DELETE FROM teachers WHERE id = p_id;
+END //
+
+-- Listar teachers por usuario
+CREATE PROCEDURE sp_find_teachers_by_user(IN p_user_id INT)
+BEGIN
+    SELECT * FROM teachers WHERE user_id = p_user_id;
+END //
 
 DELIMITER ;
 SET foreign_key_checks = 1;
