@@ -25,6 +25,12 @@ async create(teacherdata)
     const [rows] = await db.execute('CALL sp_find_teachers_by_user(?)', [user_id]);
     return rows[0];
   }
+
+  // Contar alumnos por teacher
+  async countAlumnsByTeacher(teacher_name) {
+    const [rows] = await db.execute('CALL sp_count_alumns_by_teacher(?)', [teacher_name]);
+    return rows[0][0].cantalumns; // Retorna la cantidad de alumnos
+  }
 }
 
 module.exports = new TeacherRepo();

@@ -73,7 +73,7 @@ INSERT INTO roles (name) VALUES ('admin'), ('school');
 INSERT INTO users (id, username, user_activity, password) VALUES (1, 'admin','admin', '$2b$10$.n0s847tiSxBqDvIo6Vg5ujXC5zIUmm98bTjBWnRdqX9CxxbIo7wS');
 INSERT INTO users_roles (user_id, role_id) VALUES (1, 1); -- Rol Admin
 
--- Usuario 'Gimnasia' (pass: 12345)
+-- Usuario 'Gymnastic' (pass: 12345)
 INSERT INTO users (id, username, user_activity, password) VALUES (2, 'Gymnastic', 'Gimnasia','$2b$10$.n0s847tiSxBqDvIo6Vg5ujXC5zIUmm98bTjBWnRdqX9CxxbIo7wS');
 INSERT INTO users_roles (user_id, role_id) VALUES (2, 2); -- Rol school
 
@@ -87,9 +87,9 @@ INSERT INTO teachers (user_id, teacher_name) VALUES
 INSERT INTO alumns (user_id, alumn_name, alumn_age, alumn_level, alumn_activity, phone, alumn_group) VALUES
 (2, 'Lucas Martínez', 15, '2', 'Gimnasia', '+541123456789', 'Ludmila'),
 (2, 'Sofía Rodríguez', 14, '3', 'Gimnasia', '+541198765432', 'Ludmila'),
-(3, 'Mateo Benítez', 16, '3', 'Gimnasia', '+541133445566', 'Messi'),
-(4, 'Valentina Flores', 15, '2', 'Gimnasia', '+541155667788', 'Ludmila'),
-(4, 'Santiago Gómez', 12, '1', 'Gimnasia', '+541177889900', 'Messi'),
+(2, 'Mateo Benítez', 16, '3', 'Gimnasia', '+541133445566', 'Messi'),
+(2, 'Valentina Flores', 15, '2', 'Gimnasia', '+541155667788', 'Ludmila'),
+(2, 'Santiago Gómez', 12, '1', 'Gimnasia', '+541177889900', 'Messi'),
 (2, 'Mia Carrizo', 11, '7', 'Gimnasia', '+541122334455', 'Messi'),
 (2, 'Thiago Silva', 12, '7', 'Gimnasia', '+541166778899', 'Ludmila'),
 (2, 'Emma Pereyra', 17, '9', 'Gimnasia', '+541144556677', 'Messi');
@@ -254,6 +254,12 @@ END //
 CREATE PROCEDURE sp_find_teachers_by_user(IN p_user_id INT)
 BEGIN
     SELECT * FROM teachers WHERE user_id = p_user_id;
+END //
+
+-- Contar alumnos por teacher
+CREATE PROCEDURE sp_count_alumns_by_teacher(IN p_teacher_name VARCHAR(100)) 
+BEGIN
+    SELECT COUNT(*) AS cantalumns FROM alumns WHERE alumn_group = p_teacher_name;
 END //
 
 DELIMITER ;

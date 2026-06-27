@@ -7,16 +7,14 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             
             try {
-                // 1. Armamos el objeto JSON limpio usando ÚNICAMENTE los IDs que existen en tu HTML actual
+                // 1. Armo el objeto JSON limpio
                 const alumnData = {
                     alumn_name: document.getElementById('alumn_name').value,
                     alumn_age: parseInt(document.getElementById('alumn_age').value, 10), // Forzamos entero para la BD
                     phone: document.getElementById('phone').value,
                     alumn_activity: document.getElementById('alumn_activity').value, // Ahora sí existe en el HTML
                     
-                    // Como quitaste estos campos del HTML, los enviamos con valores por defecto
-                    // para que tu backend (Node y MariaDB) no tire un error de campos requeridos
-                    alumn_group: 'Sin grupo', 
+                    alumn_group: 'Sin Profe', 
                     alumn_level: '1'
                 };
 

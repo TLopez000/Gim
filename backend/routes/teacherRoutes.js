@@ -9,6 +9,7 @@ router.use(verifyToken);
 // 1. RUTAS ESPECÍFICAS (Van primero)
 
 router.get('/my-teachers', teacherController.getTeachers);
+router.get('/my-teachers/count/:teacher_name', teacherController.countAlumnsByTeacher);
 router.post('/create', teacherController.createTeacher);
 
 // 3. RUTAS TOTALMENTE DINÁMICAS (Van al final de todo)

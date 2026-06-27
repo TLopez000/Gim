@@ -49,6 +49,17 @@ class teacherController {
             res.status(500).json({ message: "Error al eliminar el teacher.", error: error.message });
         }
     }
+
+    // Contar alumnos por teacher
+    async countAlumnsByTeacher(req, res) {
+        try {
+            const { teacher_name } = req.params;
+            const cantalumns = await teacherRepo.countAlumnsByTeacher(teacher_name);
+            res.json({ cantalumns });
+        } catch (error) {
+            res.status(500).json({ message: "Error al contar alumnos por teacher.", error: error.message });
+        }
+    }
 }
 
 module.exports = new teacherController();

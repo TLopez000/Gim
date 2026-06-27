@@ -1,9 +1,18 @@
 let teachers = []; // 🌟 Variable global para almacenar los profesores
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // 1. 🚨 CORREGIDO: Centralizamos la carga inicial de datos de manera limpia
-    await loadAlumns(); 
-    await loadTeachers(); // Esta función ahora se encarga de rellenar la lista y los selectores
+
+    try {
+        await Promise.all([           
+            loadTeachers(), // Ahora sí, 'teachers' se llenará ANTES de renderizar cualquier cosa
+            loadAlumns(),
+        ]);
+
+        populateTeacherFilter(); // Llenamos el select de profesores para filtrar
+
+    } catch (error) {
+        console.error("Error en la precarga de datos:", error);
+    }
     
     // 2. Inicializar los eventos de los Filtros (Buscar y Borrar)
     initFilterEvents();
@@ -44,6 +53,34 @@ function initFilterEvents() {
         });
     }
 }
+// CARGA OPCIONES DE FILTRO
+
+function populateTeacherFilter() {
+    const selectGroup = document.getElementById('selectGroup');
+    if (!selectGroup) return;
+
+    // 1. Limpiamos el select conservando únicamente la primera opción ("Todos")
+    selectGroup.innerHTML = '<option value="all">Todos</option>';
+
+    const defaultOption = document.createElement('option');
+    defaultOption.value = "Sin Profe";
+    defaultOption.textContent = "Sin Profe";
+    selectGroup.appendChild(defaultOption);
+
+    // 2. Recorremos el array global y añadimos cada profesor dinámicamente
+    teachers.forEach(teacher => {
+        const option = document.createElement('option');
+        
+        // 🚨 IMPORTANTE: Revisa cómo viene estructurado tu objeto desde la BD.
+        // Si tu objeto tiene 'teacher_name', usa teacher.teacher_name. Si usa 'name', cambia a teacher.name.
+        const name = teacher.teacher_name || teacher.name || teacher; 
+        
+        option.value = name;
+        option.textContent = name;
+        
+        selectGroup.appendChild(option);
+    });
+}
 
 // --- FUNCIÓN PARA LOS BOTONES DE CAMBIO DE VISTA ---
 function initViewTabs() {
@@ -76,8 +113,8 @@ function initViewTabs() {
             document.getElementById('filterSection').classList.add('w3-hide'); 
             document.getElementById('containerTeachers').classList.remove('w3-hide');
             document.getElementById('tableTitle').textContent = "Listado de Profesores";
-            
-            renderTeachersTable(); 
+
+            loadTeachers();
         });
     }
 }
@@ -86,11 +123,11 @@ function initViewTabs() {
 
 
 function renderTeachersTable() {
-    // 🚨 CORREGIDO: Apuntamos al cuerpo de la tabla (tbody) y no al contenedor DIV principal
+    
     const tbody = document.getElementById('teachersTableBody');
     if (!tbody) return;
     tbody.replaceChildren();
-
+   
     teachers.forEach(t => {
         const row = document.createElement('tr');
         row.style.borderBottom = "1px solid #2a2a2a";
@@ -101,9 +138,16 @@ function renderTeachersTable() {
         tdName.textContent = t.teacher_name;
 
         // Columna de Alumnos Activos
-        const tdActivos = document.createElement('td');
-        tdActivos.style.padding = "16px";
-        tdActivos.textContent = "-";
+        const tdCantAlumns = document.createElement('td');
+        tdCantAlumns.style.padding = '16px';
+        tdCantAlumns.textContent = 'Cargando...'; // Texto temporal animado o estático
+
+        loadAlumnsByTeacher(t.teacher_name).then(respuesta => {
+        const cantidad = respuesta.count || respuesta.cantidad || respuesta || 0;
+        tdCantAlumns.textContent = cantidad.cantalumns;
+        });
+
+        row.appendChild(tdCantAlumns);
 
         // Acciones para el profesor
         // Celda Acciones
@@ -113,20 +157,14 @@ function renderTeachersTable() {
         tdActions.style.verticalAlign = "middle";
         
         const btnBan = document.createElement('button');
-        btnBan.className = "w3-button w3-round-large";
-        btnBan.style.backgroundColor = "#ff4d4d";
-        btnBan.style.color = "white";
-        btnBan.style.padding = "6px 14px";
-        btnBan.style.fontSize = "0.85em";
-        btnBan.style.fontWeight = "bold";
-        btnBan.style.border = "none";
-        btnBan.style.cursor = "pointer";
-        btnBan.textContent = "Eliminar";
-        
+        btnBan.className = 'w3-button w3-red w3-medium w3-round';
+        btnBan.innerHTML = '<i class="fa fa-trash"></i>';
+        btnBan.style.display = "inline-block";
+
         btnBan.addEventListener('click', () => deleteTeacher(t.id));
         tdActions.appendChild(btnBan);
 
-        row.append(tdName, tdActivos, tdActions);
+        row.append(tdName, tdCantAlumns, tdActions);
         tbody.appendChild(row);
     });
 }
@@ -145,17 +183,22 @@ function renderAlumnsTable(alumns) {
         const tdAge = document.createElement('td');
         tdAge.textContent = a.alumn_age;
         
+        // CELDA EDITABLE DE PROFESORES ( CON LOS DISPONIBLES )
         const tdGroup = document.createElement('td');
         const selectGroup = document.createElement('select');
         selectGroup.className = 'w3-select w3-border w3-round w3-small';
         selectGroup.style.width = '120px'; 
         
-        let options = ['Sin grupo','Ludmila', 'Messi','Fede','Ronaldinho']; 
-        options.forEach(opt => {
+        const defaultOption = document.createElement('option');
+        defaultOption.value = "Sin Profe"; // 👈 Envía un string vacío (o "Sin Grupo" si tu BD lo prefiere)
+        defaultOption.textContent = "Sin Profe";
+        selectGroup.appendChild(defaultOption);
+
+        teachers.forEach(opt => {
             const option = document.createElement('option');
-            option.value = opt;
-            option.textContent = opt;
-            if (opt === a.alumn_group) {
+            option.value = opt.teacher_name;
+            option.textContent = opt.teacher_name;
+            if (opt.teacher_name === a.alumn_group) {
                 option.selected = true; 
             }
             selectGroup.appendChild(option);
@@ -178,6 +221,8 @@ function renderAlumnsTable(alumns) {
 
         const tdPhone = document.createElement('td');
         tdPhone.textContent = a.phone;
+   
+        // CELDA EDITABLE DE NIVEL
 
         const tdNivel = document.createElement('td');
         const inputLevel = document.createElement('input');
@@ -209,13 +254,23 @@ function renderAlumnsTable(alumns) {
         });
 
         tdNivel.appendChild(inputLevel);
+       
+        // CELDA ACCIONES
 
         const tdActions = document.createElement('td');
+        tdActions.style.padding = "16px";
+        tdActions.style.textAlign = "center";
+        tdActions.style.verticalAlign = "middle";
+
         const btnDelete = document.createElement('button');
-        btnDelete.className = 'w3-button w3-red w3-tiny w3-round';
-        btnDelete.textContent = 'Borrar';
+        btnDelete.className = 'w3-button w3-red w3-medium w3-round';
+        btnDelete.innerHTML = '<i class="fa fa-trash"></i>';
+        btnDelete.style.display = "inline-block";  
+
         btnDelete.addEventListener('click', () => deleteAlumn(a.id));
         tdActions.appendChild(btnDelete);
+        
+      
 
         row.append(tdName, tdAge, tdGroup, tdNivel, tdPhone, tdActions);
         tbody.appendChild(row);
@@ -233,6 +288,15 @@ async function loadTeachers() {
     }
 }
 
+async function loadAlumnsByTeacher(teacher_name) {
+    try {
+        const cantalumns = await apiService.request(`/teachers/my-teachers/count/${teacher_name}`, 'GET');
+        return cantalumns; // Retorna la cantidad de alumnos
+    } catch (error) {
+        showModal('Error', 'No se pudo cargar la cantidad de alumnos: ' + error.message);
+    }
+}
+
 async function createTeacher() { 
     const form = document.getElementById('addTeacherForm');
     if (form) {
@@ -246,11 +310,9 @@ async function createTeacher() {
                 const response = await apiService.request('/teachers/create', 'POST', teacherData);
                 
                 showModal('Éxito', 'Profesor creado correctamente');
-                form.reset(); // 🌟 Limpia el input de texto automáticamente
+                form.reset(); // Limpia el input de texto automáticamente
 
-                // 🌟 Actualiza la tabla en tiempo real
-                await loadTeachers(); 
-                renderTeachersTable();
+                loadTeachers();
             }
             catch(error) {
                 showModal('Error', 'No se pudo crear el profesor: ' + error.message);
@@ -267,7 +329,8 @@ async function deleteTeacher(id) {
     try {
         await apiService.request(`/teachers/${id}`, 'DELETE');
         showModal('Éxito', 'Profesor eliminado con éxito');
-        loadTeachers(); 
+        
+        loadTeachers();
     } catch (error) {
         showModal('Error al borrar profesor', error.message);
     }
