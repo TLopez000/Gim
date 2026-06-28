@@ -1,6 +1,6 @@
 # 🤸 Gim - Sistema de Gestión de Gimnasia
 
-**Gim** es una aplicación web integral diseñada para la gestión de inscripciones, asignación de grupos y control de alumnos para escuelas de gimnasia. Ofrece una interfaz de administración rápida, fluida y con un diseño oscuro premium optimizado para el ámbito deportivo.
+**Gim** es una aplicación web integral diseñada para la gestión de inscripciones, asignación de grupos y control de alumnos para escuelas de gimnasia. Ofrece una interfaz de administración rápida, fluida y con un diseño personalizado.
 
 ---
 
@@ -25,18 +25,20 @@ El proyecto está construido bajo una arquitectura limpia y desacoplada (Client-
 gim-app/
 │
 ├── backend/
-│   ├── config/             # Conexión a la Base de Datos (MySQL/MongoDB)
+│   ├── config/             # Conexión y configuracion de Base de Datos (MySQL/MongoDB)
 │   ├── controllers/        # Lógica de negocio (alumnController, teacherController)
 │   ├── routes/             # Endpoints de la API (/alumnos, /teachers)
-│   ├── models/             # Modelos de datos y queries
+│   ├── repositories/       # Modelos de datos y queries
 │   └── server.js           # Archivo central de inicio de Express
+|   ├── middleware/         # Autenticacion
+│   
 │
 └── frontend/
     ├── css/
     │   └── custom.css      # Estilos personalizados oscuros del club
     ├── js/
-    │   ├── api.js          # Servicio centralizado de peticiones HTTP
-    │   └── main.js         # Controladores de la interfaz, eventos y tablas
-    └── index.html          # Panel de administración (Dashboard) principal
+    │   ├── services/          # Servicio centralizado de peticiones HTTP
+    │   └── frontControllers/  # Controladores de la interfaz, eventos y tablas
+    └── html/         # Paneles de administracion
 
 
