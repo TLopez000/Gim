@@ -11,13 +11,13 @@
         try {
             // Intentar acceder a localStorage para verificar disponibilidad
             const test = '__test__';
-            localStorage.setItem(test, test);
-            localStorage.removeItem(test);
-            return localStorage;
-        } catch (e) {
-            // Si localStorage no está disponible, usar sessionStorage
-            console.warn('localStorage no disponible, usando sessionStorage');
+            sessionStorage.setItem(test, test);
+            sessionStorage.removeItem(test);
             return sessionStorage;
+        } catch (e) {
+            // Si sessionStorage no está disponible, usar localStorage
+            console.warn('sessionStorage no disponible, usando localStorage');
+            return localStorage;
         }
     })(),
 

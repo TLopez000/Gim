@@ -3,8 +3,8 @@
  */
 
 // 1. COMPROBACIÓN ANTIPARPADEO INMEDIATA
-const role = localStorage.getItem('role');
-const token = localStorage.getItem('token');
+const role = sessionStorage.getItem('role');
+const token = sessionStorage.getItem('token');
 
 if (role != 'admin') {
     // Si no hay sesión, rebota al login sin mostrar nada
