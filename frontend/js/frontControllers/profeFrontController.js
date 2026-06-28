@@ -34,12 +34,13 @@ function initFilterEvents() {
             // Capturamos ambos selectores del HTML
             const group = document.getElementById('selectGroup').value;
             const level = document.getElementById('selectLevel').value;
+            const pay_state = document.getElementById('selectPayState').value;
             
             // Si el grupo es "all", convertimos la lógica o llamamos al filtro correspondiente
-            if (group === "all" && level === "0") {
+            if (group === "all" && level === "0" && pay_state === "all") {
                 await loadAlumns();
             } else {
-                await loadAlumnsByFilter(group, level);
+                await loadAlumnsByFilter(group, level, pay_state);
             }
         });
     }
@@ -49,6 +50,7 @@ function initFilterEvents() {
         btnClearFilter.addEventListener('click', async () => {
             document.getElementById('selectGroup').value = "all";
             document.getElementById('selectLevel').value = "0";
+            document.getElementById('selectPayState').value = "all";
             await loadAlumns();
         });
     }
@@ -122,35 +124,27 @@ function initViewTabs() {
 // --- FUNCIÓN PARA RENDERIZAR LAS TABLAS ---
 
 
-function renderTeachersTable() {
-    
+async function renderTeachersTable() {
     const tbody = document.getElementById('teachersTableBody');
     if (!tbody) return;
     tbody.replaceChildren();
    
-    teachers.forEach(t => {
+    // Usamos for...of para poder manejar el asincronismo (await) fila por fila ordenadamente
+    for (const t of teachers) {
         const row = document.createElement('tr');
         row.style.borderBottom = "1px solid #2a2a2a";
 
-        // Nombre del profesor
+        // 1. Nombre del profesor
         const tdName = document.createElement('td');
         tdName.style.padding = "16px";
         tdName.textContent = t.teacher_name;
 
-        // Columna de Alumnos Activos
+        // 2. Columna de Alumnos Activos (Asíncrona)
         const tdCantAlumns = document.createElement('td');
         tdCantAlumns.style.padding = '16px';
-        tdCantAlumns.textContent = 'Cargando...'; // Texto temporal animado o estático
+        tdCantAlumns.textContent = 'Cargando...'; 
 
-        loadAlumnsByTeacher(t.teacher_name).then(respuesta => {
-        const cantidad = respuesta.count || respuesta.cantidad || respuesta || 0;
-        tdCantAlumns.textContent = cantidad.cantalumns;
-        });
-
-        row.appendChild(tdCantAlumns);
-
-        // Acciones para el profesor
-        // Celda Acciones
+        // 3. Acciones para el profesor
         const tdActions = document.createElement('td');
         tdActions.style.padding = "16px";
         tdActions.style.textAlign = "center";
@@ -160,39 +154,55 @@ function renderTeachersTable() {
         btnBan.className = 'w3-button w3-red w3-medium w3-round';
         btnBan.innerHTML = '<i class="fa fa-trash"></i>';
         btnBan.style.display = "inline-block";
-
         btnBan.addEventListener('click', () => deleteTeacher(t.id));
         tdActions.appendChild(btnBan);
 
+        // Ensamblamos la fila base inmediatamente al DOM de la tabla
         row.append(tdName, tdCantAlumns, tdActions);
         tbody.appendChild(row);
-    });
+
+        // 🌟 LLAMADA ASÍNCRONA: Buscamos la cantidad real en segundo plano sin congelar la app
+        loadAlumnsByTeacher(t.teacher_name).then(respuesta => {
+            // Aseguramos capturar el valor numérico correcto según tu backend
+            const cantidad = respuesta?.cantalumns ?? respuesta?.count ?? respuesta?.cantidad ?? 0;
+            tdCantAlumns.textContent = cantidad;
+        }).catch(() => {
+            tdCantAlumns.textContent = '0'; // En caso de error, muestra 0
+        });
+    }
 }
 
 
 function renderAlumnsTable(alumns) {
     const tbody = document.getElementById('alumnsTableBody');
+    if (!tbody) return;
     tbody.replaceChildren(); 
 
     alumns.forEach(a => {
         const row = document.createElement('tr');
+        row.style.borderBottom = "1px solid #2a2a2a";
 
+        // 1. NOMBRE
         const tdName = document.createElement('td');
+        tdName.style.padding = "12px";
         tdName.textContent = a.alumn_name;
         
+        // 2. EDAD
         const tdAge = document.createElement('td');
+        tdAge.style.padding = "12px";
         tdAge.textContent = a.alumn_age;
         
-        // CELDA EDITABLE DE PROFESORES ( CON LOS DISPONIBLES )
+        // 3. CELDA EDITABLE DE PROFESORES
         const tdGroup = document.createElement('td');
+        tdGroup.style.padding = "12px";
         const selectGroup = document.createElement('select');
         selectGroup.className = 'w3-select w3-border w3-round w3-small';
-        selectGroup.style.width = '120px'; 
+        selectGroup.style.width = '130px'; 
         
-        const defaultOption = document.createElement('option');
-        defaultOption.value = "Sin Profe"; // 👈 Envía un string vacío (o "Sin Grupo" si tu BD lo prefiere)
-        defaultOption.textContent = "Sin Profe";
-        selectGroup.appendChild(defaultOption);
+        const defaultProfOption = document.createElement('option');
+        defaultProfOption.value = "Sin Profe"; 
+        defaultProfOption.textContent = "Sin Profe";
+        selectGroup.appendChild(defaultProfOption);
 
         teachers.forEach(opt => {
             const option = document.createElement('option');
@@ -210,21 +220,21 @@ function renderAlumnsTable(alumns) {
                 await apiService.request(`/alumnos/update-group/${a.id}`, 'PUT', { group: nuevoGrupo });
                 showModal('Éxito', 'Grupo actualizado');
                 a.alumn_group = nuevoGrupo; 
-            }
-            catch (error) {
+            } catch (error) {
                 showModal('Error', 'No se pudo actualizar el grupo: ' + error.message);
                 selectGroup.value = a.alumn_group; 
             }
         });
-
         tdGroup.appendChild(selectGroup);
 
+        // 4. TELÉFONO
         const tdPhone = document.createElement('td');
+        tdPhone.style.padding = "12px";
         tdPhone.textContent = a.phone;
    
-        // CELDA EDITABLE DE NIVEL
-
+        // 5. CELDA EDITABLE DE NIVEL
         const tdNivel = document.createElement('td');
+        tdNivel.style.padding = "12px";
         const inputLevel = document.createElement('input');
         inputLevel.type = 'number';  
         inputLevel.min = '1';        
@@ -236,13 +246,11 @@ function renderAlumnsTable(alumns) {
 
         inputLevel.addEventListener('change', async (e) => {
             let nuevoLevel = parseInt(e.target.value, 10);
-        
             if (isNaN(nuevoLevel) || nuevoLevel < 1 || nuevoLevel > 10) {
                showModal('Error', 'El nivel debe ser entre 1 y 10');
                inputLevel.value = a.alumn_level; 
                return;
             }
-
             try {
                await apiService.request(`/alumnos/update-level/${a.id}`, 'PUT', { level: nuevoLevel });
                showModal('Éxito', 'Nivel actualizado');
@@ -252,27 +260,58 @@ function renderAlumnsTable(alumns) {
                inputLevel.value = a.alumn_level; 
             }
         });
-
         tdNivel.appendChild(inputLevel);
-       
-        // CELDA ACCIONES
+        
+        // 6. CELDA EDITABLE PARA ESTADO DE PAGO (¡CORREGIDA! 🌟)
+        const tdPay = document.createElement('td');
+        tdPay.style.padding = "12px";
+        const selectPayState = document.createElement('select');
+        selectPayState.className = 'w3-select w3-border w3-round w3-small';
+        selectPayState.style.width = '110px'; 
+        
+        const opt2 = document.createElement('option');
+        opt2.value = "paid";
+        opt2.textContent = "Al día";
+        
+        const opt3 = document.createElement('option');
+        opt3.value = "unpaid";
+        opt3.textContent = "No pagó";
 
+        // Marcar la opción seleccionada según los datos del alumno
+        if (a.pay_state === "paid") opt2.selected = true;
+        else if (a.pay_state === "unpaid") opt3.selected = true;
+        else opt1.selected = true;
+
+        selectPayState.append(opt2, opt3);
+
+        selectPayState.addEventListener('change', async (e) => {
+            const newState = e.target.value;
+            try {
+                await apiService.request(`/alumnos/update-paystate/${a.id}`, 'PUT', { pay_state: newState });
+                showModal('Éxito', 'Estado de pago actualizado');
+                a.pay_state = newState; 
+            } catch (error) {
+                showModal('Error', 'No se pudo actualizar el estado: ' + error.message);
+                selectPayState.value = a.pay_state; 
+            }
+        });
+        tdPay.appendChild(selectPayState);
+
+        // 7. CELDA ACCIONES
         const tdActions = document.createElement('td');
-        tdActions.style.padding = "16px";
+        tdActions.style.padding = "12px";
         tdActions.style.textAlign = "center";
         tdActions.style.verticalAlign = "middle";
 
         const btnDelete = document.createElement('button');
-        btnDelete.className = 'w3-button w3-red w3-medium w3-round';
+        btnDelete.className = 'w3-button w3-red w3-small w3-round-large';
         btnDelete.innerHTML = '<i class="fa fa-trash"></i>';
         btnDelete.style.display = "inline-block";  
-
         btnDelete.addEventListener('click', () => deleteAlumn(a.id));
         tdActions.appendChild(btnDelete);
         
-      
-
-        row.append(tdName, tdAge, tdGroup, tdNivel, tdPhone, tdActions);
+        // 🌟 Agregamos todas las celdas en orden exacto a la fila
+        row.append(tdName, tdAge, tdGroup, tdNivel, tdPhone, tdPay, tdActions);
         tbody.appendChild(row);
     });
 }
@@ -350,9 +389,9 @@ async function deleteAlumn(id) {
     }
 }
 
-async function loadAlumnsByFilter(group, level) { 
+async function loadAlumnsByFilter(group, level, pay_state) { 
     try {
-       const alumns = await apiService.request(`/alumnos/filter/${group}/${level}`, 'GET');
+       const alumns = await apiService.request(`/alumnos/filter/${group}/${level}/${pay_state}`, 'GET');
        renderAlumnsTable(alumns);
     }
     catch (error) {
@@ -367,6 +406,5 @@ async function loadAlumns() {
     } catch (error) {
         showModal('Error', 'No se pudieron cargar los alumnos: ' + error.message);
     }
-}
-
+} 
 

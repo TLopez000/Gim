@@ -28,3 +28,13 @@ td{
     opacity: 0.9;
     border: 1px solid #333;
 }
+
+#smokeCanvas {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1; /* Lo manda al fondo de las tarjetas */
+    pointer-events: none; /* Permite hacer clic en los inputs */
+}

@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     alumn_activity: document.getElementById('alumn_activity').value, // Ahora sí existe en el HTML
                     
                     alumn_group: 'Sin Profe', 
+                    pay_state: 'unpaid',
                     alumn_level: '1'
                 };
 

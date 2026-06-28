@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body style="background-color: #121212; font-family: sans-serif; margin: 0; padding: 0;">
-
+    <canvas id="smokeCanvas"></canvas>
     <div class="w3-bar w3-black w3-border-bottom w3-border-dark-grey" style="height: 50px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px;">
         <span class="w3-text-red" style="font-size: 1.2em; font-weight: bold; letter-spacing: 1px;">GYMNASTIC - Panel de Control</span>
         <button class="w3-button w3-round w3-hover-red btn-logout" style="color: #ccc; font-weight: bold; background: transparent;">
@@ -25,6 +25,15 @@
                 <label class="w3-text-grey" style="white-space: nowrap; font-size: 0.9em; font-weight: bold;">Profe:</label>
                 <select class="w3-input w3-border w3-round w3-text-white" id="selectGroup" style="background-color: #2b2b2b; border-color: #444; height: 38px; padding: 6px 12px;">
                     <option value="all">Todos</option>
+                </select>
+            </div>
+
+            <div style="flex: 1; min-width: 200px; max-width: max-content; display: flex; align-items: center; gap: 10px;">
+                <label class="w3-text-grey" style="white-space: nowrap; font-size: 0.9em; font-weight: bold;">Estado de Pago</label>
+                <select class="w3-input w3-border w3-round w3-text-white" id="selectPayState" style="background-color: #2b2b2b; border-color: #444; height: 38px; padding: 6px 12px;">
+                    <option value="all">Todos</option>
+                    <option value="paid">Al dia</option>
+                    <option value="unpaid">No pagó</option>
                 </select>
             </div>
 
@@ -91,6 +100,7 @@
                             <th style="padding: 16px; font-weight: 600; color: #aaa; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px;">Grupo de clases</th>
                             <th style="padding: 16px; font-weight: 600; color: #aaa; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px;">Nivel</th>
                             <th style="padding: 16px; font-weight: 600; color: #aaa; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px;">Teléfono</th>
+                            <th style="padding: 16px; font-weight: 600; color: #aaa; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px;">Estado de pago</th>   
                             <th style="padding: 16px; font-weight: 600; color: #ff4d4d; text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.5px; text-align: center;">Acciones</th>
                         </tr>
                     </thead>
@@ -118,5 +128,6 @@
     <script src="../js/components/uiHandlers.js"></script>
     <script src="../js/utils/authHelper.js"></script>
     <script src="../js/frontControllers/profeFrontController.js"></script>
+    <script src="../js/sources/smoke.js" defer></script>
 </body>
 </html>
