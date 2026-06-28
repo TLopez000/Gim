@@ -10,7 +10,7 @@ class AlumnController
     try {
         // 1. EXTRAER las variables desde el req.body (¡Esto es lo que faltaba!)
         
-        const { alumn_name, alumn_age, phone, alumn_activity, alumn_group, alumn_level } = req.body;
+        const { alumn_name, alumn_age, phone, alumn_activity, alumn_group, pay_state, alumn_level } = req.body;
 
         const schoolUser = await userRepo.findByActivity(alumn_activity); 
         
@@ -32,6 +32,7 @@ class AlumnController
             alumn_level: alumn_level ? parseInt(alumn_level, 10) : 1,
             alumn_age: alumn_age ? parseInt(alumn_age, 10) : null,
             alumn_activity: alumn_activity,
+            pay_state: pay_state || 'unpaid',
             phone: phone || null
         };
 
@@ -112,6 +113,21 @@ class AlumnController
        }
     }
 
+    async updateAlumnPayState(req, res) {
+        const id = parseInt(req.params.id, 10);
+        const { pay_state } = req.body;
+        
+        const userId = req.userId;
+        
+        try {
+            const result = await alumnRepo.updateAlumnPayState(id, userId, pay_state);
+            res.json({ message: "Estado actualizado correctamente." });
+        }
+        catch (error) {
+            res.status(500).json({ message: "Error al actualizar el estado.", error: error.message });
+        }
+    }
+
     async updateAlumnGroup(req, res) {
         const id = parseInt(req.params.id, 10);
         const { group } = req.body;
@@ -129,17 +145,18 @@ class AlumnController
 
    async getAlumnsByFilter(req, res) {
     try {
-        // 1. LEER DE REQ.PARAMS (Coincide con ruta /filter/:group/:level)
-        const { group, level } = req.params;
+        // 1. LEER DE REQ.PARAMS (Coincide con ruta /filter/:group/:level/:pay_state)
+        const { group, level, pay_state } = req.params;
 
         const userId = req.userId; // Id proveniente de la sesion iniciada
 
         // 2. IMPORTANTE: Si el frontend manda el string "null" o "all", lo pasamos a null real para MariaDB
         const filterGroup = (group === 'null' || group === 'all' || !group) ? null : group;
         const filterLevel = level;
+        const filterPayState = (pay_state === 'null' || pay_state === 'all' || !pay_state) ? null : pay_state;
 
         // 3. Pasamos los valores normalizados al repositorio
-        const result = await alumnRepo.findByFilter(filterGroup, filterLevel, userId);
+        const result = await alumnRepo.findByFilter(filterGroup, filterLevel, filterPayState, userId);
          
         // 4. Validamos si encontramos alumnos
         if (!result || result.length === 0) {

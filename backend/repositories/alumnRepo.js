@@ -35,8 +35,8 @@ class AlumnRepository
     }
 
     // Obtener todos los alumnos de un grupo 
-    async findByFilter(alumnGroup, alumnLevel, userId) {
-        const [rows] = await db.execute('CALL sp_find_alumns_by_filter(?,?, ?)', [alumnGroup, alumnLevel, userId]);
+    async findByFilter(alumnGroup, alumnLevel, alumnPayState, userId) {
+        const [rows] = await db.execute('CALL sp_find_alumns_by_filter(?,?, ?,?)', [alumnGroup, alumnLevel, alumnPayState, userId]);
         return rows[0];
     }
 
@@ -58,6 +58,13 @@ class AlumnRepository
     async updateAlumnLevel(id, userId, newlevel) 
     {
         await db.execute('CALL sp_update_level(?, ?, ?)', [id, userId, newlevel]);
+        return true;
+    }
+
+    // Actualizar el estado de pago de un alumno
+    async updateAlumnPayState(id, userId, newPayState)
+    {
+        await db.execute('CALL sp_update_pay_state(?,?,?)', [id,userID,newPayState]);
         return true;
     }
 
