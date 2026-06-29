@@ -36,7 +36,7 @@ class AdminController
                 return res.status(400).json({ message: "Usuario y contraseña son requeridos." });
             }
 
-            // Validación del test2 (largo de contraseña)
+            // Validación del largo de contraseña
             if (password.length < 6) {
                 return res.status(400).json({ message: "La contraseña es demasiado corta" });
             }
@@ -45,7 +45,7 @@ class AdminController
             const hashedPassword = await bcrypt.hash(password, 10);            
             
             // 2. Creación mediante el repositorio (que usa el SP sp_create_user)
-            const userId = await userRepo.create(username, user_activity, hashedPassword, 'school'); // Por defecto, todos los usuarios registrados son 'teacher'
+            const userId = await userRepo.create(username, user_activity, hashedPassword, 'school'); // Por defecto, todos los usuarios registrados son 'school'
             
             res.status(201).json({ 
                 message: "Usuario registrado con éxito.", 
