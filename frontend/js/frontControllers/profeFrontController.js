@@ -1,10 +1,10 @@
-let teachers = []; // 🌟 Variable global para almacenar los profesores
+let teachers = []; // Variable global para almacenar los profesores
 
 document.addEventListener('DOMContentLoaded', async () => {
 
     try {
         await Promise.all([           
-            loadTeachers(), // Ahora sí, 'teachers' se llenará ANTES de renderizar cualquier cosa
+            loadTeachers(), // teachers se llenara ANTES de renderizar cualquier cosa
             loadAlumns(),
         ]);
 
@@ -129,7 +129,7 @@ async function renderTeachersTable() {
     if (!tbody) return;
     tbody.replaceChildren();
    
-    // Usamos for...of para poder manejar el asincronismo (await) fila por fila ordenadamente
+    //  for...of para poder manejar el asincronismo (await) fila por fila ordenadamente
     for (const t of teachers) {
         const row = document.createElement('tr');
         row.style.borderBottom = "1px solid #2a2a2a";
@@ -157,13 +157,12 @@ async function renderTeachersTable() {
         btnBan.addEventListener('click', () => deleteTeacher(t.id));
         tdActions.appendChild(btnBan);
 
-        // Ensamblamos la fila base inmediatamente al DOM de la tabla
+        // añado la fila base inmediatamente al DOM de la tabla
         row.append(tdName, tdCantAlumns, tdActions);
         tbody.appendChild(row);
 
-        // 🌟 LLAMADA ASÍNCRONA: Buscamos la cantidad real en segundo plano sin congelar la app
+        //  LLAMADA ASÍNCRONA: Busco la cantidad real en segundo plano sin congelar la app
         loadAlumnsByTeacher(t.teacher_name).then(respuesta => {
-            // Aseguramos capturar el valor numérico correcto según tu backend
             const cantidad = respuesta?.cantalumns ?? respuesta?.count ?? respuesta?.cantidad ?? 0;
             tdCantAlumns.textContent = cantidad;
         }).catch(() => {
@@ -262,7 +261,7 @@ function renderAlumnsTable(alumns) {
         });
         tdNivel.appendChild(inputLevel);
         
-        // 6. CELDA EDITABLE PARA ESTADO DE PAGO (¡CORREGIDA! 🌟)
+        // 6. CELDA EDITABLE PARA ESTADO DE PAGO
         const tdPay = document.createElement('td');
         tdPay.style.padding = "12px";
         const selectPayState = document.createElement('select');
@@ -280,7 +279,6 @@ function renderAlumnsTable(alumns) {
         // Marcar la opción seleccionada según los datos del alumno
         if (a.pay_state === "paid") opt2.selected = true;
         else if (a.pay_state === "unpaid") opt3.selected = true;
-        else opt1.selected = true;
 
         selectPayState.append(opt2, opt3);
 
@@ -310,7 +308,6 @@ function renderAlumnsTable(alumns) {
         btnDelete.addEventListener('click', () => deleteAlumn(a.id));
         tdActions.appendChild(btnDelete);
         
-        // 🌟 Agregamos todas las celdas en orden exacto a la fila
         row.append(tdName, tdAge, tdGroup, tdNivel, tdPhone, tdPay, tdActions);
         tbody.appendChild(row);
     });
