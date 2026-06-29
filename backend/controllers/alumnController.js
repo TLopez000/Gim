@@ -8,7 +8,6 @@ class AlumnController
 {
     async uploadAlumn(req, res) {
     try {
-        // 1. EXTRAER las variables desde el req.body (¡Esto es lo que faltaba!)
         
         const { alumn_name, alumn_age, phone, alumn_activity, alumn_group, pay_state, alumn_level } = req.body;
 
@@ -24,7 +23,6 @@ class AlumnController
 
         const userId = schoolUser.id;
 
-        // 3. Armamos el objeto limpio para el repositorio
         const alumnData = {
             user_id: userId,
             alumn_name: alumn_name || null,
@@ -41,7 +39,7 @@ class AlumnController
 
         return res.status(201).json({
             success: true,
-            message: "Alumno inscrito exitosamente.",
+            message: "Alumno inscripto exitosamente.",
             insertId
         });
 
@@ -59,7 +57,7 @@ class AlumnController
     {
         try
         {
-            // El SP sp_find_alumns_by_user filtra automáticamente por user_id
+            // El SP sp_find_alumns_by_user filtra por user_id
             const alumns = await alumnRepo.findByUserId(req.userId);
             res.json(alumns);
         }
@@ -77,7 +75,6 @@ class AlumnController
             const { id } = req.params;
             const userId = req.userId;
 
-            // 1. Obtener metadatos para conocer la ruta del archivo físico
             const alumn = await alumnRepo.findById(id, userId);
             
             if (!alumn) {
