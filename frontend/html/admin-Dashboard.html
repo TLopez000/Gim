@@ -21,11 +21,11 @@
         
         <!-- Grupo de botones a la derecha -->
         <div style="display: flex; gap: 10px; align-items: center;">
-            <!-- BOTÓN SOLICITADO: Registrar Nuevo Usuario -->
+            <!-- BOTÓN Registrar Nuevo Usuario -->
             <a href="/register" class="w3-button w3-black w3-border w3-border-yellow w3-text-yellow w3-round" style="font-size: 0.85em; font-weight: bold; padding: 6px 14px; text-decoration: none; transition: 0.2s;">
                 <i class="fas fa-user-plus" style="margin-right: 6px;"></i> Registrar Usuario
             </a>
-            
+            <!-- BOTON Salir -->
             <button class="w3-button w3-round w3-hover-yellow btn-logout" style="color: #ccc; font-weight: bold; background: transparent; font-size: 0.85em; transition: 0.2s;">
                 Salir
             </button>
@@ -42,7 +42,7 @@
                 <span class="w3-text-grey" style="font-size: 0.9em;">Gestión de Usuarios</span>
             </div>
             
-            <!-- Contenedor responsive moderno -->
+            <!-- Contenedor tabla users -->
             <div class="w3-responsive" style="border-radius: 12px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.6); border: 1px solid #2a2a2a;">
                 <table class="w3-table w3-text-white" style="background-color: #1e1e1e; border-collapse: collapse; width: 100%;">
                     <thead>
@@ -55,7 +55,7 @@
                         </tr>
                     </thead>
                     <tbody id="usersTableBody">
-                        <!-- Las filas dinámicas desde JS se inyectarán aquí -->
+                        <!-- Las filas dinámicas desde JS se inyectan aca -->
                     </tbody>
                 </table>
             </div>
