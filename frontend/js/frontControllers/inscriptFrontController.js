@@ -12,14 +12,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     alumn_name: document.getElementById('alumn_name').value,
                     alumn_age: parseInt(document.getElementById('alumn_age').value, 10), // Forzamos entero para la BD
                     phone: document.getElementById('phone').value,
-                    alumn_activity: document.getElementById('alumn_activity').value, // Ahora sí existe en el HTML
-                    
+                    alumn_activity: document.getElementById('alumn_activity').value,
+
+                    // campos por defecto para cada alumno (son definidos despues por el usuario)
                     alumn_group: 'Sin Profe', 
                     pay_state: 'unpaid',
                     alumn_level: '1'
                 };
 
-                // 2. Ejecutamos la petición enviando el JSON puro
+                // 2. Ejecutamos la petición enviando el JSON 
                 await apiService.request('/alumnos/inscript', 'POST', alumnData, false); 
                 
                 showModal('Éxito', 'Alumno inscripto exitosamente.');
