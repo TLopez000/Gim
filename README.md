@@ -9,6 +9,7 @@
 ### **Backend**
 *   **Node.js**: Entorno de ejecución para el servidor.
 *   **Express**: Framework robusto y ligero para la creación de la API REST.
+*   **MySQL/MariaDB**: Base de datos
 
 ### **Frontend**
 *   **W3.CSS**: Framework CSS ágil y responsivo para una interfaz rápida y sin sobrecarga de estilos.
