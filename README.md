@@ -1,12 +1,10 @@
-# 🤸 Gim - Sistema de Gestión de Gimnasia
+# 🤸 Gim - Sistema de Gestión de Escuela de Gimnasia
 
 **Gim** es una aplicación web integral diseñada para la gestión de inscripciones, asignación de grupos y control de alumnos para escuelas de gimnasia. Ofrece una interfaz de administración rápida, fluida y con un diseño personalizado.
 
 ---
 
 ## 🚀 Tecnologías Utilizadas
-
-El proyecto está construido bajo una arquitectura limpia y desacoplada (Client-Server):
 
 ### **Backend**
 *   **Node.js**: Entorno de ejecución para el servidor.
