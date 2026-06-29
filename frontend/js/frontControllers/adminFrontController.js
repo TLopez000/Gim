@@ -2,11 +2,11 @@
  * adminFrontController.js (o adminController.js en el frontend)
  */
 
-// 1. COMPROBACIÓN ANTIPARPADEO INMEDIATA
+// 1. COMPROBACIÓN PARA NO ACCEDER A ADMIN DASHBOARD O REGISTER SIN TOKEN O PERMISOS
 const role = sessionStorage.getItem('role');
 const token = sessionStorage.getItem('token');
 
-if (role != 'admin') {
+if (role != 'admin' && !token) {
     // Si no hay sesión, rebota al login sin mostrar nada
     window.location.href = '/login';
 } else {
@@ -45,7 +45,7 @@ async function loadUsers() {
  */
 function renderUsersTable(users) {
     const tbody = document.getElementById('usersTableBody');
-    if (!tbody) return; // Salvaguarda extra
+    if (!tbody) return;
     
     tbody.replaceChildren();
 
