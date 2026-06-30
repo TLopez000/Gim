@@ -5,12 +5,12 @@ class AlumnRepository
     // Insertar un nuevo registro de alumno
     async create(alumnData) 
     {
-        const { user_id, alumn_name, alumn_group, alumn_level, alumn_age, alumn_activity, phone } = alumnData;
+        const { user_id, alumn_name, alumn_group, alumn_level, alumn_age, alumn_activity, pay_state, phone } = alumnData;
     
         try {
            const [rows] = await db.execute(
-              'CALL sp_create_alumn(?, ?, ?, ?, ?, ?, ?)', 
-               [user_id, alumn_name, alumn_group, alumn_level, alumn_age , alumn_activity, phone]
+              'CALL sp_create_alumn(?, ?, ?, ?, ?, ?, ?, ?)', 
+               [user_id, alumn_name, alumn_group, alumn_level, alumn_age , alumn_activity, pay_state, phone]
            );
 
           // Validamos de forma segura que la respuesta tenga la estructura esperada
@@ -64,7 +64,7 @@ class AlumnRepository
     // Actualizar el estado de pago de un alumno
     async updateAlumnPayState(id, userId, newPayState)
     {
-        await db.execute('CALL sp_update_pay_state(?,?,?)', [id,userID,newPayState]);
+        await db.execute('CALL sp_update_pay_state(?,?,?)', [id,userId,newPayState]);
         return true;
     }
 
