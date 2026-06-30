@@ -3,10 +3,8 @@ let teachers = []; // Variable global para almacenar los profesores
 document.addEventListener('DOMContentLoaded', async () => {
 
     try {
-        await Promise.all([           
-            loadTeachers(), // teachers se llenara ANTES de renderizar cualquier cosa
-            loadAlumns(),
-        ]);
+        await loadTeachers(); // teachers se llenara ANTES de renderizar cualquier cosa
+        loadAlumns();
 
         populateTeacherFilter(); // Llenamos el select de profesores para filtrar
 
@@ -103,6 +101,8 @@ function initViewTabs() {
             document.getElementById('tableTitle').textContent = "Listado de Alumnos";
             
             loadAlumns(); 
+            //recargo el select de filtros por si hubo cambios en los profesores
+            populateTeacherFilter();
         });
 
         // Clic en pestaña Profesores
@@ -348,7 +348,7 @@ async function createTeacher() {
                 showModal('Éxito', 'Profesor creado correctamente');
                 form.reset(); // Limpia el input de texto automáticamente
 
-                loadTeachers();
+                loadTeachers(); // loadteachers para actualizar la variable teachers
             }
             catch(error) {
                 showModal('Error', 'No se pudo crear el profesor: ' + error.message);
@@ -363,8 +363,12 @@ async function deleteTeacher(id) {
     }
 
     try {
+        //primero actualizo reseteando a "sin profe" a sus alumnos
+        await apiService.request(`/alumnos/reset-group/${id}`, 'PUT');
+        //luego elimino el profesor
         await apiService.request(`/teachers/${id}`, 'DELETE');
         showModal('Éxito', 'Profesor eliminado con éxito');
+
         
         loadTeachers();
     } catch (error) {

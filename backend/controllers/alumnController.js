@@ -140,6 +140,21 @@ class AlumnController
         }
     }
 
+    async resetAlumnGroup(req ,res) {
+        
+        const teacherId = parseInt(req.params.teacherId, 10);
+
+        const userId = req.userId;
+
+        try {
+            const result = await alumnRepo.resetAlumnGroup(userId, teacherId);
+            res.json({ message: "Grupos actualizados correctamente."});
+        }
+        catch(error){
+            res.status(500).json({message: "Error al actualizar sus alumnos.", error: error.message});
+        }
+    }
+
    async getAlumnsByFilter(req, res) {
     try {
         // 1. LEER DE REQ.PARAMS (Coincide con ruta /filter/:group/:level/:pay_state)

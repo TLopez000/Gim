@@ -250,6 +250,19 @@ BEGIN
     WHERE id = p_id AND user_id = p_user_id;
 END //
 
+-- Actualizar grupo de alumnos de un profesor eliminado
+CREATE PROCEDURE sp_reset_group(IN p_user_id INT, IN p_teacher_id INT)
+BEGIN
+     UPDATE alumns
+    SET alumn_group = 'Sin Profe'
+    WHERE user_id = p_user_id
+      AND alumn_group = (
+          SELECT teacher_name
+          FROM teachers
+          WHERE id = p_teacher_id
+      );
+END //
+
 -- Obtener grupos disponibles por userid
 CREATE PROCEDURE sp_get_groups_by_user(IN p_user_id INT)
 BEGIN

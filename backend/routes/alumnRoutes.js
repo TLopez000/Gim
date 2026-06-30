@@ -12,6 +12,7 @@ router.get('/my-alumns', alumnController.getMyAlumns);
 router.put('/update-level/:id', alumnController.updateAlumnLevel);
 router.put('/update-group/:id', alumnController.updateAlumnGroup);
 router.put('/update-paystate/:id', alumnController.updateAlumnPayState);
+router.put('/reset-group/:teacherId', alumnController.resetAlumnGroup);
 
 
 // 2. RUTAS DINÁMICAS CON PREFIJO (Si tuvieras, ej: /group/:group)

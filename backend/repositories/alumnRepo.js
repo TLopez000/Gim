@@ -81,6 +81,13 @@ class AlumnRepository
         const [rows] = await db.execute('CALL sp_get_groups_by_user(?)', [userId]);
         return rows[0];
     }
+
+    // Resetear el grupo de los alumnos de un profesor eliminado
+    async resetAlumnGroup(userId, teacherId)
+    {
+        await db.execute('CALL sp_reset_group(?,?)', [userId, teacherId]);
+        return true;
+    }
 }
 
 module.exports = new AlumnRepository();
